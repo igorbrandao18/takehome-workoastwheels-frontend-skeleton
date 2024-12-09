@@ -12,7 +12,9 @@ import { FormValues } from "@/components/search/form";
 import { AdditionalFilters } from "@/components/search/AdditionalFilters";
 import { VehicleList } from "@/components/search/VehicleList";
 import { TimeRangeFilters } from "@/components/search/TimeRangeFilters";
-import { SlidersHorizontal, Car } from "lucide-react";
+import { SearchHeader } from "@/components/search/SearchHeader";
+import { SearchStats } from "@/components/search/SearchStats";
+import { SlidersHorizontal, RotateCcw } from "lucide-react";
 
 export function SearchPage() {
   const [initialStartDateAndTime] = useState(() =>
@@ -37,6 +39,10 @@ export function SearchPage() {
     },
   });
 
+  const resetFilters = () => {
+    form.reset();
+  };
+
   const filters = (
     <ErrorBoundary fallback={<ErrorFallback message="Failed to load filters" />}>
       <Suspense
@@ -52,9 +58,20 @@ export function SearchPage() {
         }
       >
         <div className="bg-white p-6 rounded-lg shadow-lg space-y-6">
-          <div className="flex items-center gap-2 pb-4 border-b">
-            <SlidersHorizontal className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold">Filters</h2>
+          <div className="flex items-center justify-between pb-4 border-b">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold">Filters</h2>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={resetFilters}
+              className="text-muted-foreground hover:text-primary"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset
+            </Button>
           </div>
           <AdditionalFilters />
         </div>
@@ -65,19 +82,7 @@ export function SearchPage() {
   return (
     <Form {...form}>
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-          <div className="container mx-auto">
-            <div className="flex h-16 items-center px-4">
-              <div className="flex items-center gap-2">
-                <Car className="h-6 w-6 text-primary" />
-                <h1 className="text-xl font-bold tracking-tight text-primary">
-                  Workoast Wheels
-                </h1>
-              </div>
-            </div>
-          </div>
-        </header>
+        <SearchHeader />
 
         <div className="container mx-auto py-6">
           {/* Time Range Filters */}
@@ -108,6 +113,8 @@ export function SearchPage() {
 
             {/* Vehicle List */}
             <main className="col-span-12 lg:col-span-9">
+              <SearchStats />
+              
               <ErrorBoundary
                 fallback={<ErrorFallback message="Failed to load vehicles" />}
               >
