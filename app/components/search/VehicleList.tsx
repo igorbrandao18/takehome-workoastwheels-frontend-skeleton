@@ -12,15 +12,37 @@ export function VehicleList() {
   const formValues = watch();
   const currentPage = formValues.page || 1;
 
+  const priceInCents = formValues.price 
+    ? [formValues.price[0] * 100, formValues.price[1] * 100]
+    : [2000, 5500]; // valores padrão em centavos ($20 - $55)
+
   const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
-    startTime: formValues.startTime ? combineDateAndTime(formValues.startDate, formValues.startTime) : '',
-    endTime: formValues.endTime ? combineDateAndTime(formValues.endDate, formValues.endTime) : '',
-    minPassengers: formValues.minPassengers,
-    classification: formValues.classification,
-    make: formValues.make,
-    price: formValues.price,
+    startTime: formValues.startDate ? formValues.startDate.toISOString() : '',
+    endTime: formValues.endDate ? formValues.endDate.toISOString() : '',
+    minPassengers: formValues.minPassengers || 1,
+    classification: formValues.classification || [],
+    make: formValues.make || [],
+    price: priceInCents, // Enviando preços em centavos
     year: formValues.year ? { lte: Number(formValues.year) } : undefined,
     page: currentPage,
+  }, {
+    retry: false,
+    onSuccess: (data) => {
+      console.log('Vehicles Details:', data?.vehicles?.map(vehicle => ({
+        id: vehicle.id,
+        make: vehicle.make,
+        model: vehicle.model,
+        hourly_rate_cents: vehicle.hourly_rate_cents,
+        hourly_rate_dollars: (vehicle.hourly_rate_cents / 100).toFixed(2),
+        classification: vehicle.classification,
+        max_passengers: vehicle.max_passengers,
+        within_price_range: vehicle.hourly_rate_cents >= priceInCents[0] && 
+                          vehicle.hourly_rate_cents <= priceInCents[1]
+      })));
+    },
+    onError: (error) => {
+      console.error('Query Error:', error);
+    }
   });
 
   if (isLoading) {
@@ -39,9 +61,16 @@ export function VehicleList() {
     );
   }
 
-  const filteredVehicles = data?.vehicles.filter(vehicle => 
-    !formValues.year || vehicle.year <= formValues.year
-  );
+  const filteredVehicles = data?.vehicles.filter(vehicle => {
+    // Filtro de ano
+    const yearMatch = !formValues.year || vehicle.year <= formValues.year;
+    
+    // Filtro de preço
+    const priceMatch = vehicle.hourly_rate_cents >= priceInCents[0] && 
+                      vehicle.hourly_rate_cents <= priceInCents[1];
+    
+    return yearMatch && priceMatch;
+  });
 
   if (!filteredVehicles?.length) {
     return (

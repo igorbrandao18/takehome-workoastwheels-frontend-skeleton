@@ -19,7 +19,7 @@ export function FilterSection() {
     minPassengers: 1,
     classification: [],
     make: [],
-    price: [10, 100],
+    price: [20, 55],
     year: undefined,
     doors: undefined,
     page: 1,
@@ -58,13 +58,12 @@ export function FilterSection() {
           Hourly Price Range (${formValues.price?.[0]} - ${formValues.price?.[1]})
         </Label>
         <Slider
-          defaultValue={[10, 100]}
-          min={10}
-          max={100}
+          defaultValue={[20, 55]}
+          min={20}
+          max={55}
           step={5}
-          value={formValues.price || [10, 100]}
+          value={formValues.price || [20, 55]}
           onValueChange={(value) => {
-            console.log('Slider Value Changed:', value);
             setValue('price', value);
           }}
           className="w-full"
@@ -84,7 +83,7 @@ export function FilterSection() {
             <SelectValue placeholder="Select minimum passengers" />
           </SelectTrigger>
           <SelectContent>
-            {[1, 2, 4, 6, 8].map((count) => (
+            {[4, 5, 8].map((count) => (
               <SelectItem 
                 key={count} 
                 value={String(count)}
