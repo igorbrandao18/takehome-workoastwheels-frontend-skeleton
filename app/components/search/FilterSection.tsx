@@ -1,17 +1,45 @@
 import { useFormContext } from "react-hook-form";
 import { Slider } from "../ui/slider";
+import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { trpc } from "@/lib/trpc";
 import { FormValues } from "./form";
 import { Label } from "../ui/label";
+import { RotateCcw } from "lucide-react";
 
-export function AdditionalFilters() {
-  const { setValue, watch } = useFormContext<FormValues>();
+export function FilterSection() {
+  const { register, setValue, watch, reset } = useFormContext<FormValues>();
   const formValues = watch();
+
   const { data: options } = trpc.vehicles.options.useQuery();
 
+  const defaultValues = {
+    minPassengers: 1,
+    classification: [],
+    make: [],
+    price: [10, 100],
+    page: 1
+  };
+
+  const handleReset = () => {
+    reset(defaultValues);
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Filters</h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleReset}
+          className="text-sm"
+        >
+          <RotateCcw className="mr-2 h-4 w-4" />
+          Reset Filters
+        </Button>
+      </div>
+
       {/* Price Range Filter */}
       <div className="space-y-2">
         <Label>Hourly Price Range (${formValues.price?.[0]} - ${formValues.price?.[1]})</Label>
@@ -86,4 +114,4 @@ export function AdditionalFilters() {
       </div>
     </div>
   );
-}
+} 

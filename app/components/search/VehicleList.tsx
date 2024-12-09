@@ -5,6 +5,7 @@ import VehicleCard from "../VehicleCard";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Vehicle {
   id: string;
@@ -63,7 +64,14 @@ export function VehicleList() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="w-full h-[320px] rounded-xl shadow-md animate-pulse bg-gray-200" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, delay: i * 0.1 }}
+            className="w-full h-[420px] rounded-xl shadow-md animate-pulse bg-gray-200"
+          />
         ))}
       </div>
     );
@@ -80,37 +88,52 @@ export function VehicleList() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.vehicles.map((vehicle: Vehicle) => (
-          <VehicleCard
-            key={vehicle.id}
-            thumbnail={vehicle.thumbnail_url}
-            make={vehicle.make}
-            model={vehicle.model}
-            year={vehicle.year}
-            classification={vehicle.classification}
-            doors={vehicle.doors}
-            price={formatPrice(vehicle.hourly_rate_cents)}
-            passengers={vehicle.max_passengers}
-            onReserve={() => {
-              console.log('Reserve vehicle:', vehicle.id);
-            }}
-            features={[
-              `${vehicle.doors} doors`,
-              `${vehicle.max_passengers} passengers`,
-              vehicle.classification,
-              `${vehicle.year} model`
-            ]}
-          />
-        ))}
-      </div>
+      <AnimatePresence>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+          {data.vehicles.map((vehicle: Vehicle, index: number) => (
+            <motion.div
+              key={vehicle.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <VehicleCard
+                thumbnail={vehicle.thumbnail_url}
+                make={vehicle.make}
+                model={vehicle.model}
+                year={vehicle.year}
+                classification={vehicle.classification}
+                doors={vehicle.doors}
+                price={formatPrice(vehicle.hourly_rate_cents)}
+                passengers={vehicle.max_passengers}
+                onReserve={() => {
+                  console.log('Reserve vehicle:', vehicle.id);
+                }}
+                features={[
+                  `${vehicle.doors} doors`,
+                  `${vehicle.max_passengers} passengers`,
+                  vehicle.classification,
+                  `${vehicle.year} model`
+                ]}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </AnimatePresence>
 
-      <div className="flex justify-center gap-2 mt-8">
+      <motion.div 
+        className="flex justify-center gap-2 mt-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
         <Button
           variant="outline"
           size="sm"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage <= 1}
+          className="transition-all hover:scale-105"
         >
           <ChevronLeft className="h-4 w-4" />
           Previous
@@ -120,11 +143,12 @@ export function VehicleList() {
           size="sm"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={!data.hasNextPage}
+          className="transition-all hover:scale-105"
         >
           Next
           <ChevronRight className="h-4 w-4" />
         </Button>
-      </div>
+      </motion.div>
     </div>
   );
 }
