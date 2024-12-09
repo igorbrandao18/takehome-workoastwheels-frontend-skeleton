@@ -57,24 +57,7 @@ export function SearchPage() {
           </div>
         }
       >
-        <div className="bg-white p-6 rounded-lg shadow-lg space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold">Filters</h2>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={resetFilters}
-              className="text-muted-foreground hover:text-primary"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Reset
-            </Button>
-          </div>
-          <FilterSection />
-        </div>
+      <FilterSection />
       </Suspense>
     </ErrorBoundary>
   );
