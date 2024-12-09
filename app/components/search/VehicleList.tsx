@@ -12,8 +12,6 @@ export function VehicleList() {
   const formValues = watch();
   const currentPage = formValues.page || 1;
 
-  console.log('Price Range:', formValues.price); // Deve mostrar um array [min, max]
-
   const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
     startTime: formValues.startTime ? combineDateAndTime(formValues.startDate, formValues.startTime) : '',
     endTime: formValues.endTime ? combineDateAndTime(formValues.endDate, formValues.endTime) : '',
@@ -21,8 +19,7 @@ export function VehicleList() {
     classification: formValues.classification,
     make: formValues.make,
     price: formValues.price,
-    year: formValues.year,
-    doors: formValues.doors,
+    year: formValues.year ? { lte: Number(formValues.year) } : undefined,
     page: currentPage,
   });
 
@@ -42,7 +39,11 @@ export function VehicleList() {
     );
   }
 
-  if (!data?.vehicles.length) {
+  const filteredVehicles = data?.vehicles.filter(vehicle => 
+    !formValues.year || vehicle.year <= formValues.year
+  );
+
+  if (!filteredVehicles?.length) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-500">No vehicles found matching your criteria.</p>
@@ -50,13 +51,11 @@ export function VehicleList() {
     );
   }
 
-  const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`;
-
   return (
     <div className="space-y-6">
       <AnimatePresence>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.vehicles.map((vehicle, index) => (
+          {filteredVehicles.map((vehicle, index) => (
             <motion.div
               key={vehicle.id}
               initial={{ opacity: 0, y: 20 }}
@@ -71,7 +70,7 @@ export function VehicleList() {
                 year={vehicle.year}
                 classification={vehicle.classification}
                 doors={vehicle.doors}
-                price={formatPrice(vehicle.hourly_rate_cents)}
+                price={`$${(vehicle.hourly_rate_cents / 100).toFixed(2)}`}
                 passengers={vehicle.max_passengers}
                 onReserve={() => {
                   console.log('Reserve vehicle:', vehicle.id);

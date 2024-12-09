@@ -7,6 +7,7 @@ export interface FormValues {
   classification: string[];
   make: string[];
   price: number[];
+  year?: number;
   page: number;
 }
 
