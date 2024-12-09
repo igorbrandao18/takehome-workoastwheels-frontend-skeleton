@@ -13,6 +13,8 @@ export function FilterSection() {
   const formValues = watch();
   const { data: options, isLoading } = trpc.vehicles.options.useQuery();
 
+  const availableYears = [2020, 2021, 2022, 2023, 2024];
+
   const defaultValues = {
     minPassengers: 1,
     classification: [],
@@ -169,7 +171,7 @@ export function FilterSection() {
             <SelectValue placeholder="Select year" />
           </SelectTrigger>
           <SelectContent>
-            {[2022, 2023, 2024].map((year) => (
+            {availableYears.map((year) => (
               <SelectItem 
                 key={year} 
                 value={String(year)}

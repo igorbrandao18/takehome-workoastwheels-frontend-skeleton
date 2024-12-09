@@ -9,7 +9,7 @@ import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useForm } from "react-hook-form";
 import { FormValues } from "@/components/search/form";
-import { AdditionalFilters } from "@/components/search/AdditionalFilters";
+import { FilterSection } from "../components/search/FilterSection";
 import { VehicleList } from "@/components/search/VehicleList";
 import { TimeRangeFilters } from "@/components/search/TimeRangeFilters";
 import { SearchHeader } from "@/components/search/SearchHeader";
@@ -73,7 +73,7 @@ export function SearchPage() {
               Reset
             </Button>
           </div>
-          <AdditionalFilters />
+          <FilterSection />
         </div>
       </Suspense>
     </ErrorBoundary>
