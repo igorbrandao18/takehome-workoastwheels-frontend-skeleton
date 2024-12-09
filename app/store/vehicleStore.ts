@@ -1,23 +1,34 @@
 import { create } from 'zustand';
+import type { VehicleFilters } from '../lib/api';
 
 interface VehicleState {
-  vehicleYears: number[];
-  vehicleModels: string[];
-  vehicleDoors: number[];
-  vehicleMaxPassengers: number[];
-  setVehicleYears: (years: number[]) => void;
-  setVehicleModels: (models: string[]) => void;
-  setVehicleDoors: (doors: number[]) => void;
-  setVehicleMaxPassengers: (passengers: number[]) => void;
+  filters: VehicleFilters;
+  setFilters: (filters: Partial<VehicleFilters>) => void;
+  resetFilters: () => void;
 }
 
+const defaultFilters: VehicleFilters = {
+  startTime: new Date().toISOString(),
+  endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  page: 1,
+  perPage: 10,
+  sortBy: 'price_asc'
+};
+
 export const useVehicleStore = create<VehicleState>((set) => ({
-  vehicleYears: [],
-  vehicleModels: [],
-  vehicleDoors: [],
-  vehicleMaxPassengers: [],
-  setVehicleYears: (years) => set({ vehicleYears: years }),
-  setVehicleModels: (models) => set({ vehicleModels: models }),
-  setVehicleDoors: (doors) => set({ vehicleDoors: doors }),
-  setVehicleMaxPassengers: (passengers) => set({ vehicleMaxPassengers: passengers }),
+  filters: defaultFilters,
+  
+  setFilters: (newFilters) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        ...newFilters,
+        page: 'page' in newFilters ? newFilters.page : 1
+      }
+    }));
+  },
+  
+  resetFilters: () => {
+    set({ filters: defaultFilters });
+  },
 })); 

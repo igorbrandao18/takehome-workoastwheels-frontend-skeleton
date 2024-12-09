@@ -11,7 +11,6 @@ interface FleetVehicle {
 }
 
 const NUM_VEHICLES = 200;
-const MODEL_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
 
 const FLEET_VEHICLES: FleetVehicle[] = [
   {
@@ -23,7 +22,7 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     thumbnail_urls: [
       "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2010,
+    year: 2020,
   },
   {
     make: "Honda",

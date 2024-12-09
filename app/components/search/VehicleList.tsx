@@ -1,149 +1,50 @@
-import { trpc } from "@/lib/trpc";
-import { useFormContext } from "react-hook-form";
-import { FormValues } from "./form";
-import VehicleCard from "../VehicleCard";
-import { Button } from "../ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect } from 'react';
+import { useVehicleStore } from '../../store/vehicleStore';
+import { useVehicleOptions, useVehicleSearch } from '../../hooks/useVehicles';
+import VehicleCard from '../VehicleCard';
+import { Button } from '../ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useVehicleStore } from "../../store/vehicleStore";
-import { debounce } from 'lodash';
-  
-interface Vehicle {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  doors: number;
-  max_passengers: number;
-  classification: string;
-  thumbnail_url: string;
-  hourly_rate_cents: number;
-}
 
 export function VehicleList() {
-  const { watch, setValue } = useFormContext<FormValues>();
-  const formValues = watch();
-  const [currentPage, setCurrentPage] = useState(formValues.page);
-  const { vehicleYears, setVehicleYears, setVehicleModels, setVehicleDoors, setVehicleMaxPassengers } = useVehicleStore();
-
-  const combineDateAndTime = (date: Date, timeStr: string) => {
-    const [hours, minutes] = timeStr.split(':');
-    const newDate = new Date(date);
-    newDate.setHours(parseInt(hours, 10));
-    newDate.setMinutes(parseInt(minutes, 10));
-    return newDate.toISOString();
-  };
-
-  const getThumbnailUrls = (thumbnailUrl: string): string[] => {
-    return thumbnailUrl.split(',');
-  };
-
-  const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
-    startTime: formValues.startTime ? combineDateAndTime(formValues.startDate, formValues.startTime) : '',
-    endTime: formValues.endTime ? combineDateAndTime(formValues.endDate, formValues.endTime) : '',
-    minPassengers: formValues.minPassengers,
-    classification: formValues.classification,
-    make: formValues.make,
-    price: formValues.price,
-    year: vehicleYears.length > 0 ? vehicleYears : formValues.year,
-    doors: formValues.doors,
-    page: currentPage,
-  }, {
-    retry: false,
-    onError: (error) => {
-      console.error('Search error:', error);
-    },
-    onSuccess: (data) => {
-      console.log('Search results:', {
-        filters: formValues,
-        results: data,
-        availableYears: vehicleYears
-      });
-      const years = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.year)));
-      const models = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.model)));
-      const doors = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.doors)));
-      const maxPassengers = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.max_passengers)));
-
-      setVehicleYears(years);
-      setVehicleModels(models);
-      setVehicleDoors(doors);
-      setVehicleMaxPassengers(maxPassengers);
-    }
-  });
+  const { filters, setFilters } = useVehicleStore();
+  
+  const { 
+    data: searchData, 
+    isLoading: searchLoading,
+    error: searchError 
+  } = useVehicleSearch();
 
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    setValue('page', newPage);
+    setFilters({ page: newPage });
   };
 
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100);
-  };
-
-  const updateStore = debounce((data) => {
-    const years = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.year)));
-    const models = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.model)));
-    const doors = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.doors)));
-    const maxPassengers = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.max_passengers)));
-
-    setVehicleYears(years);
-    setVehicleModels(models);
-    setVehicleDoors(doors);
-    setVehicleMaxPassengers(maxPassengers);
-  }, 300); // 300ms debounce delay
-
-  useEffect(() => {
-    if (data) {
-      updateStore(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    const savedFilters = JSON.parse(localStorage.getItem('filters') || '{}');
-    if (savedFilters) {
-      // Restaurar filtros do localStorage
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('filters', JSON.stringify(formValues));
-  }, [formValues]);
-
-  if (isLoading) {
+  if (searchError) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, delay: i * 0.1 }}
-            className="w-full h-[420px] rounded-xl shadow-md animate-pulse bg-gray-200"
-          />
-        ))}
+      <div className="text-center text-red-500">
+        {searchError.message}
       </div>
     );
   }
 
-  if (isError || !data || data.vehicles.length === 0) {
+  if (searchLoading) {
     return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-semibold text-gray-700">No vehicles found</h2>
-        <p className="text-gray-500 mt-2">Try adjusting your filters to see more results</p>
+      <div className="text-center">
+        Carregando...
       </div>
     );
+  }
+
+  // Garantir que searchData existe antes de renderizar
+  if (!searchData?.data) {
+    return null;
   }
 
   return (
     <div className="space-y-6">
-      <AnimatePresence>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-          {data.vehicles.map((vehicle: Vehicle, index: number) => (
+      <AnimatePresence mode="wait">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {searchData.data.map((vehicle, index) => (
             <motion.div
               key={vehicle.id}
               initial={{ opacity: 0, y: 20 }}
@@ -152,56 +53,58 @@ export function VehicleList() {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <VehicleCard
-                thumbnail={getThumbnailUrls(vehicle.thumbnail_url)[0]}
+                thumbnail={vehicle.thumbnail_url}
                 make={vehicle.make}
                 model={vehicle.model}
                 year={vehicle.year}
                 classification={vehicle.classification}
                 doors={vehicle.doors}
-                price={formatPrice(vehicle.hourly_rate_cents)}
+                price={`$${(vehicle.hourly_rate_cents / 100).toFixed(2)}/hr`}
                 passengers={vehicle.max_passengers}
-                onReserve={() => {
-                  console.log('Reserve vehicle:', vehicle.id);
-                }}
                 features={[
                   `${vehicle.doors} doors`,
                   `${vehicle.max_passengers} passengers`,
                   vehicle.classification,
                   `${vehicle.year} model`
                 ]}
+                onReserve={() => {
+                  console.log('Reserve vehicle:', vehicle.id);
+                }}
               />
             </motion.div>
           ))}
         </div>
       </AnimatePresence>
 
-      <motion.div 
-        className="flex justify-center gap-2 mt-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-          className="transition-all hover:scale-105"
+      {searchData.pagination && (
+        <motion.div 
+          className="flex justify-center gap-2 mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
         >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={!data.hasNextPage}
-          className="transition-all hover:scale-105"
-        >
-          Next
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </motion.div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(filters.page! - 1)}
+            disabled={!searchData.pagination.hasPreviousPage}
+            className="transition-all hover:scale-105"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(filters.page! + 1)}
+            disabled={!searchData.pagination.hasNextPage}
+            className="transition-all hover:scale-105"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </motion.div>
+      )}
     </div>
   );
 }

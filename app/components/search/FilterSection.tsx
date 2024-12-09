@@ -2,7 +2,9 @@ import { useFormContext } from "react-hook-form";
 import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { trpc } from "@/lib/trpc";
 import { FormValues } from "./form";
+import { Label } from "../ui/label";
 import { RotateCcw, Users, Car, DollarSign, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useVehicleStore } from "../../store/vehicleStore";
@@ -10,7 +12,7 @@ import { useVehicleStore } from "../../store/vehicleStore";
 export function FilterSection() {
   const { setValue, watch, reset } = useFormContext<FormValues>();
   const formValues = watch();
-  const { vehicleYears } = useVehicleStore();
+  const vehicleYears = useVehicleStore((state) => state.vehicleYears);
 
   const defaultValues = {
     minPassengers: 1,
@@ -175,8 +177,8 @@ export function FilterSection() {
       <div className="space-y-3">
         <FilterLabel icon={Calendar}>Vehicle Year</FilterLabel>
         <Select
-          value={formValues.year?.[0]?.toString() || ''}
-          onValueChange={(value) => setValue('year', value ? [Number(value)] : [])}
+          value={String(formValues.maxYear || '')}
+          onValueChange={(value) => setValue('maxYear', value ? Number(value) : undefined)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select year" />
@@ -188,10 +190,10 @@ export function FilterSection() {
                 value={String(year)}
                 className={cn(
                   "cursor-pointer transition-colors",
-                  formValues.year?.[0] === year && "bg-primary/5"
+                  formValues.maxYear === year && "bg-primary/5"
                 )}
               >
-                {year}
+                {year} and older
               </SelectItem>
             ))}
           </SelectContent>

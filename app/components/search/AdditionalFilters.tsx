@@ -1,19 +1,32 @@
+import React from 'react';
 import { useFormContext } from "react-hook-form";
 import { Slider } from "../ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { FormValues } from "./form";
 import { Label } from "../ui/label";
-import { trpc } from "@/lib/trpc";
+import { useVehicleStore } from "../../store/vehicleStore";
+import { useVehicleOptions } from '../../hooks/useVehicles';
 
 export function AdditionalFilters() {
-  const { setValue, watch } = useFormContext<FormValues>();
+  const { setValue, watch } = useFormContext<FormValues>(); 
   const formValues = watch();
-  const { data: options } = trpc.vehicles.options.useQuery();
+  const { data: optionsData, isLoading, error } = useVehicleOptions();
 
-  // Lista estática de anos como fallback
-  const years = [2020, 2021, 2022, 2023, 2024];
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Erro ao carregar opções: {error.message}</div>;
+  }
+
+  const vehicleYears = optionsData?.years || [];
+
+  // Dados estáticos para os outros filtros
   const passengerCounts = [1, 2, 4, 6, 8];
   const doorCounts = [2, 4, 5];
+  const classifications = ["SUV", "Sedan", "Compact", "Luxury", "Electric"];
+  const makes = ["Toyota", "Honda", "Ford", "BMW", "Tesla", "Nissan"];
 
   return (
     <div className="space-y-6">
@@ -61,7 +74,7 @@ export function AdditionalFilters() {
             <SelectValue placeholder="Select classification" />
           </SelectTrigger>
           <SelectContent>
-            {options?.classifications.map((classification) => (
+            {classifications.map((classification) => (
               <SelectItem key={classification} value={classification}>
                 {classification}
               </SelectItem>
@@ -81,7 +94,7 @@ export function AdditionalFilters() {
             <SelectValue placeholder="Select make" />
           </SelectTrigger>
           <SelectContent>
-            {options?.makes.map((make) => (
+            {makes.map((make) => (
               <SelectItem key={make} value={make}>
                 {make}
               </SelectItem>
@@ -90,22 +103,29 @@ export function AdditionalFilters() {
         </Select>
       </div>
 
-      {/* Vehicle Year Filter */}
+      {/* Year Filter */}
       <div className="space-y-2">
         <Label>Vehicle Year</Label>
         <Select
-          value={String(formValues.year?.[0] || '')}
-          onValueChange={(value) => setValue('year', value ? [Number(value)] : [])}
+          value={String(formValues.maxYear || '')}
+          onValueChange={(value) => {
+            const yearValue = value ? Number(value) : undefined;
+            setValue('maxYear', yearValue);
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select year" />
           </SelectTrigger>
           <SelectContent>
-            {years.map((year) => (
-              <SelectItem key={year} value={String(year)}>
-                {year}
-              </SelectItem>
-            ))}
+            {vehicleYears.length > 0 ? (
+              vehicleYears.map((year) => (
+                <SelectItem key={year} value={String(year)}>
+                  {year} and older
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem value="Nenhum ano disponível">Nenhum ano disponível</SelectItem>
+            )}
           </SelectContent>
         </Select>
       </div>
