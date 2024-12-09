@@ -4,9 +4,10 @@ import { FormValues } from "./form";
 import VehicleCard from "../VehicleCard";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { useVehicleStore } from "../../store/vehicleStore";
+  
 interface Vehicle {
   id: string;
   make: string;
@@ -23,14 +24,18 @@ export function VehicleList() {
   const { watch, setValue } = useFormContext<FormValues>();
   const formValues = watch();
   const [currentPage, setCurrentPage] = useState(formValues.page);
+  const setVehicleYears = useVehicleStore((state) => state.setVehicleYears);
 
-  // Função para combinar data e hora em formato ISO
   const combineDateAndTime = (date: Date, timeStr: string) => {
     const [hours, minutes] = timeStr.split(':');
     const newDate = new Date(date);
     newDate.setHours(parseInt(hours, 10));
     newDate.setMinutes(parseInt(minutes, 10));
     return newDate.toISOString();
+  };
+
+  const getThumbnailUrls = (thumbnailUrl: string): string[] => {
+    return thumbnailUrl.split(',');
   };
 
   const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
@@ -53,6 +58,8 @@ export function VehicleList() {
         filters: formValues,
         results: data
       });
+      const years = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.year)));
+      setVehicleYears(years);
     }
   });
 
@@ -107,7 +114,7 @@ export function VehicleList() {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <VehicleCard
-                thumbnail={vehicle.thumbnail_url}
+                thumbnail={getThumbnailUrls(vehicle.thumbnail_url)[0]}
                 make={vehicle.make}
                 model={vehicle.model}
                 year={vehicle.year}

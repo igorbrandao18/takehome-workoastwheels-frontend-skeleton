@@ -10,7 +10,7 @@ interface FleetVehicle {
   year: number;
 }
 
-const NUM_VEHICLES = 100;
+const NUM_VEHICLES = 200;
 const MODEL_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
 
 const FLEET_VEHICLES: FleetVehicle[] = [
@@ -21,11 +21,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 5,
     classification: "Compact",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2010,
   },
   {
     make: "Honda",
@@ -34,11 +32,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 5,
     classification: "Compact",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2023,
+    year: 2015,
   },
   {
     make: "Ford",
@@ -47,11 +43,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 4,
     classification: "Sports",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2020,
   },
   {
     make: "Chevrolet",
@@ -60,11 +54,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 4,
     classification: "Subcompact",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2023,
   },
   {
     make: "Nissan",
@@ -73,11 +65,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 5,
     classification: "SUV",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2025,
   },
   {
     make: "Hyundai",
@@ -86,11 +76,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 7,
     classification: "SUV",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2018,
   },
   {
     make: "Volkswagen",
@@ -99,11 +87,9 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 5,
     classification: "Compact",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2012,
   },
   {
     make: "Mazda",
@@ -112,64 +98,87 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     max_passengers: 7,
     classification: "SUV",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop"
     ],
-    year: 2024,
+    year: 2019,
   },
   {
-    make: "Chrysler",
-    model: "Pacifica",
-    doors: 5,
-    max_passengers: 8,
-    classification: "Minivan",
-    thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
-    ],
-    year: 2024,
-  },
-  {
-    make: "BMW",
-    model: "X5",
-    doors: 5,
-    max_passengers: 7,
-    classification: "Luxury SUV",
-    thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
-    ],
-    year: 2024,
-  },
-  {
-    make: "Mercedes-Benz",
-    model: "C-Class",
+    make: "Audi",
+    model: "A4",
     doors: 4,
     max_passengers: 5,
     classification: "Luxury",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2023,
+  },
+  {
+    make: "Lexus",
+    model: "RX",
+    doors: 5,
+    max_passengers: 5,
+    classification: "Luxury SUV",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2022,
+  },
+  {
+    make: "Kia",
+    model: "Telluride",
+    doors: 5,
+    max_passengers: 8,
+    classification: "SUV",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2023,
+  },
+  {
+    make: "Subaru",
+    model: "Outback",
+    doors: 5,
+    max_passengers: 5,
+    classification: "Wagon",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2023,
+  },
+  {
+    make: "Porsche",
+    model: "911",
+    doors: 2,
+    max_passengers: 4,
+    classification: "Sports",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
     ],
     year: 2024,
   },
   {
-    make: "Jeep",
-    model: "Wrangler",
-    doors: 2,
-    max_passengers: 4,
-    classification: "Off-Road SUV",
+    make: "Tesla",
+    model: "Model 3",
+    doors: 4,
+    max_passengers: 5,
+    classification: "Electric",
     thumbnail_urls: [
-      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
     ],
     year: 2024,
   },
+  {
+    make: "Land Rover",
+    model: "Range Rover",
+    doors: 5,
+    max_passengers: 5,
+    classification: "Luxury SUV",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
+  }
 ];
 
 function priceFleetVehicle(fleetVehicle: FleetVehicle) {
@@ -306,10 +315,23 @@ async function checkDatabase() {
   }
 }
 
+async function logVehicles() {
+  try {
+    const vehicles = await prisma.vehicle.findMany();
+    console.log("Veículos no banco de dados:");
+    vehicles.forEach(vehicle => {
+      console.log(`ID: ${vehicle.id}, Make: ${vehicle.make}, Model: ${vehicle.model}, Year: ${vehicle.year}`);
+    });
+  } catch (error) {
+    console.error("Erro ao buscar veículos:", error);
+  }
+}
+
 async function main() {
   await checkDatabase();
   await resetTables();
   await createVehiclesAndReservations();
+  await logVehicles();
 }
 
 main()

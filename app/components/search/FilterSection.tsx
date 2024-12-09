@@ -17,10 +17,14 @@ export function FilterSection() {
     minPassengers: 1,
     classification: [],
     make: [],
-    price: [10, 100],
-    year: undefined,
+    price: [20, 47],
+    year: [],
     doors: undefined,
-    page: 1
+    page: 1,
+    startTime: "",
+    endTime: "",
+    startDate: new Date(),
+    endDate: new Date()
   };
 
   const handleReset = () => {
@@ -33,6 +37,34 @@ export function FilterSection() {
       {children}
     </div>
   );
+
+  const classifications = [
+    "Compact",
+    "SUV",
+    "Luxury",
+    "Sports",
+    "Off-Road SUV",
+    "Luxury SUV",
+    "Subcompact"
+  ];
+
+  const makes = [
+    "Toyota",
+    "Honda",
+    "Ford",
+    "Chevrolet",
+    "Nissan",
+    "Hyundai",
+    "Mercedes-Benz",
+    "BMW",
+    "Jeep"
+  ];
+
+  // Extract unique years from options and sort them in descending order
+  const vehicleYears = options 
+    ? Array.from(new Set(options.map(vehicle => vehicle.year)))
+        .sort((a, b) => b - a) // Sort years in descending order (newest first)
+    : [];
 
   return (
     <div className="space-y-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
@@ -55,10 +87,10 @@ export function FilterSection() {
           Hourly Price Range (${formValues.price?.[0]} - ${formValues.price?.[1]})
         </FilterLabel>
         <Slider
-          defaultValue={[10, 100]}
-          min={10}
-          max={100}
-          step={5}
+          defaultValue={[20, 47]}
+          min={20}
+          max={47}
+          step={1}
           value={formValues.price}
           onValueChange={(value) => setValue('price', value)}
           className="mt-2"
@@ -71,13 +103,12 @@ export function FilterSection() {
         <Select
           value={String(formValues.minPassengers)}
           onValueChange={(value) => setValue('minPassengers', Number(value))}
-          disabled={isLoading}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select minimum passengers" />
           </SelectTrigger>
           <SelectContent>
-            {[1, 2, 4, 6, 8].map((count) => (
+            {[2, 4, 5, 7].map((count) => (
               <SelectItem 
                 key={count} 
                 value={String(count)}
@@ -86,7 +117,7 @@ export function FilterSection() {
                   formValues.minPassengers === count && "bg-primary/5"
                 )}
               >
-                {count} {count === 1 ? 'passenger' : 'passengers'}
+                {count} passengers
               </SelectItem>
             ))}
           </SelectContent>
@@ -99,13 +130,12 @@ export function FilterSection() {
         <Select
           value={formValues.classification?.[0] || ''}
           onValueChange={(value) => setValue('classification', value ? [value] : [])}
-          disabled={isLoading}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select classification" />
           </SelectTrigger>
           <SelectContent>
-            {options?.classifications.map((classification: string) => (
+            {classifications.map((classification) => (
               <SelectItem 
                 key={classification} 
                 value={classification}
@@ -127,13 +157,12 @@ export function FilterSection() {
         <Select
           value={formValues.make?.[0] || ''}
           onValueChange={(value) => setValue('make', value ? [value] : [])}
-          disabled={isLoading}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select make" />
           </SelectTrigger>
           <SelectContent>
-            {options?.makes.map((make: string) => (
+            {makes.map((make) => (
               <SelectItem 
                 key={make} 
                 value={make}
@@ -153,24 +182,20 @@ export function FilterSection() {
       <div className="space-y-3">
         <FilterLabel icon={Calendar}>Vehicle Year</FilterLabel>
         <Select
-          value={String(formValues.year || '')}
-          onValueChange={(value) => {
-            setValue('year', Number(value));
-            setValue('page', 1);
-          }}
-          disabled={isLoading}
+          value={formValues.year?.[0]?.toString() || ''}
+          onValueChange={(value) => setValue('year', value ? [Number(value)] : [])}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select year" />
           </SelectTrigger>
           <SelectContent>
-            {options?.years?.map((year: number) => (
+            {!isLoading && vehicleYears.map((year) => (
               <SelectItem 
                 key={year} 
                 value={String(year)}
                 className={cn(
                   "cursor-pointer transition-colors",
-                  formValues.year === year && "bg-primary/5"
+                  formValues.year?.[0] === year && "bg-primary/5"
                 )}
               >
                 {year}
