@@ -23,16 +23,23 @@ export function VehicleList() {
   const formValues = watch();
   const [currentPage, setCurrentPage] = useState(formValues.page);
 
+  // Função para combinar data e hora em formato ISO
+  const combineDateAndTime = (date: Date, timeStr: string) => {
+    const [hours, minutes] = timeStr.split(':');
+    const newDate = new Date(date);
+    newDate.setHours(parseInt(hours, 10));
+    newDate.setMinutes(parseInt(minutes, 10));
+    return newDate.toISOString();
+  };
+
   const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
-    page: currentPage,
-    limit: 10,
-    startTime: formValues.startDate.toISOString(),
-    endTime: formValues.endDate.toISOString(),
-    passengerCount: formValues.minPassengers,
+    startTime: formValues.startTime ? combineDateAndTime(formValues.startDate, formValues.startTime) : '',
+    endTime: formValues.endTime ? combineDateAndTime(formValues.endDate, formValues.endTime) : '',
+    minPassengers: formValues.minPassengers,
     classification: formValues.classification,
     make: formValues.make,
-    priceMin: formValues.price[0],
-    priceMax: formValues.price[1],
+    price: formValues.price,
+    page: currentPage,
   }, {
     retry: false,
     onError: (error) => {
