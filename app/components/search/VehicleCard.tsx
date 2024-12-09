@@ -45,7 +45,6 @@ export function VehicleCard({
 }: VehicleCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Função para determinar o ícone baseado na classificação
   const getClassificationIcon = (classification: string) => {
     switch (classification.toLowerCase()) {
       case 'electric':

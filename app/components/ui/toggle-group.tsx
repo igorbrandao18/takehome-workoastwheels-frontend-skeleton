@@ -25,7 +25,6 @@ const ToggleGroup = React.forwardRef<
     <ToggleGroupPrimitive.Root
       ref={ref}
       className={cn("flex items-center justify-center gap-1", className)}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       type={type as any}
       {...props}
     >

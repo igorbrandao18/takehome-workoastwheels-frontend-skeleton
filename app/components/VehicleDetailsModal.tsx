@@ -50,10 +50,9 @@ export function VehicleDetailsModal({ isOpen, onClose, vehicle, onReserve }: Veh
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   
-  // Simular múltiplas imagens (em produção, viria da API)
   const images = [
     vehicle.thumbnail,
-    vehicle.thumbnail, // Substituir por imagens reais
+    vehicle.thumbnail,
     vehicle.thumbnail
   ];
 

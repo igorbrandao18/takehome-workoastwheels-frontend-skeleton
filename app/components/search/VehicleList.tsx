@@ -62,10 +62,8 @@ export function VehicleList() {
   }
 
   const filteredVehicles = data?.vehicles.filter(vehicle => {
-    // Filtro de ano
     const yearMatch = !formValues.year || vehicle.year <= formValues.year;
     
-    // Filtro de preço
     const priceMatch = vehicle.hourly_rate_cents >= priceInCents[0] && 
                       vehicle.hourly_rate_cents <= priceInCents[1];
     

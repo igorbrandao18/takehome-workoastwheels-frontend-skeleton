@@ -71,7 +71,6 @@ function Content() {
       navigate(`/confirmation/${reservation.id}`);
     } catch (error) {
       console.error("Reservation failed:", error);
-      // Handle error (e.g., show an error message)
     }
   };
 
