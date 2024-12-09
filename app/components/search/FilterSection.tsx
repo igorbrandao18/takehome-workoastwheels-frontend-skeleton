@@ -2,16 +2,15 @@ import { useFormContext } from "react-hook-form";
 import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { trpc } from "@/lib/trpc";
 import { FormValues } from "./form";
-import { Label } from "../ui/label";
 import { RotateCcw, Users, Car, DollarSign, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useVehicleStore } from "../../store/vehicleStore";
 
 export function FilterSection() {
   const { setValue, watch, reset } = useFormContext<FormValues>();
   const formValues = watch();
-  const { data: options, isLoading } = trpc.vehicles.options.useQuery();
+  const { vehicleYears } = useVehicleStore();
 
   const defaultValues = {
     minPassengers: 1,
@@ -59,12 +58,6 @@ export function FilterSection() {
     "BMW",
     "Jeep"
   ];
-
-  // Extract unique years from options and sort them in descending order
-  const vehicleYears = options 
-    ? Array.from(new Set(options.map(vehicle => vehicle.year)))
-        .sort((a, b) => b - a) // Sort years in descending order (newest first)
-    : [];
 
   return (
     <div className="space-y-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
@@ -189,7 +182,7 @@ export function FilterSection() {
             <SelectValue placeholder="Select year" />
           </SelectTrigger>
           <SelectContent>
-            {!isLoading && vehicleYears.map((year) => (
+            {vehicleYears.map((year) => (
               <SelectItem 
                 key={year} 
                 value={String(year)}

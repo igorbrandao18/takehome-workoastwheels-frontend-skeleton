@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVehicleStore } from "../../store/vehicleStore";
+import { debounce } from 'lodash';
   
 interface Vehicle {
   id: string;
@@ -24,7 +25,7 @@ export function VehicleList() {
   const { watch, setValue } = useFormContext<FormValues>();
   const formValues = watch();
   const [currentPage, setCurrentPage] = useState(formValues.page);
-  const setVehicleYears = useVehicleStore((state) => state.setVehicleYears);
+  const { vehicleYears, setVehicleYears, setVehicleModels, setVehicleDoors, setVehicleMaxPassengers } = useVehicleStore();
 
   const combineDateAndTime = (date: Date, timeStr: string) => {
     const [hours, minutes] = timeStr.split(':');
@@ -45,7 +46,7 @@ export function VehicleList() {
     classification: formValues.classification,
     make: formValues.make,
     price: formValues.price,
-    year: formValues.year,
+    year: vehicleYears.length > 0 ? vehicleYears : formValues.year,
     doors: formValues.doors,
     page: currentPage,
   }, {
@@ -56,10 +57,18 @@ export function VehicleList() {
     onSuccess: (data) => {
       console.log('Search results:', {
         filters: formValues,
-        results: data
+        results: data,
+        availableYears: vehicleYears
       });
       const years = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.year)));
+      const models = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.model)));
+      const doors = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.doors)));
+      const maxPassengers = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.max_passengers)));
+
       setVehicleYears(years);
+      setVehicleModels(models);
+      setVehicleDoors(doors);
+      setVehicleMaxPassengers(maxPassengers);
     }
   });
 
@@ -74,6 +83,35 @@ export function VehicleList() {
       currency: 'USD',
     }).format(cents / 100);
   };
+
+  const updateStore = debounce((data) => {
+    const years = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.year)));
+    const models = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.model)));
+    const doors = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.doors)));
+    const maxPassengers = Array.from(new Set(data.vehicles.map((vehicle: Vehicle) => vehicle.max_passengers)));
+
+    setVehicleYears(years);
+    setVehicleModels(models);
+    setVehicleDoors(doors);
+    setVehicleMaxPassengers(maxPassengers);
+  }, 300); // 300ms debounce delay
+
+  useEffect(() => {
+    if (data) {
+      updateStore(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const savedFilters = JSON.parse(localStorage.getItem('filters') || '{}');
+    if (savedFilters) {
+      // Restaurar filtros do localStorage
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('filters', JSON.stringify(formValues));
+  }, [formValues]);
 
   if (isLoading) {
     return (

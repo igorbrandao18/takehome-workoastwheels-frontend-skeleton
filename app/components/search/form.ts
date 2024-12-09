@@ -7,7 +7,7 @@ export interface FormValues {
   classification: string[];
   make: string[];
   price: number[];
-  year?: number;
+  year: number[];
   doors?: number;
   page: number;
 }
@@ -21,5 +21,6 @@ export const defaultValues: FormValues = {
   classification: [],
   make: [],
   price: [10, 100],
+  year: [],
   page: 1,
 }; 

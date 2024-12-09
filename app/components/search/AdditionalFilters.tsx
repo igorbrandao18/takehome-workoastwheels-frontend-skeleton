@@ -1,14 +1,19 @@
 import { useFormContext } from "react-hook-form";
 import { Slider } from "../ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { trpc } from "@/lib/trpc";
 import { FormValues } from "./form";
 import { Label } from "../ui/label";
+import { trpc } from "@/lib/trpc";
 
 export function AdditionalFilters() {
   const { setValue, watch } = useFormContext<FormValues>();
   const formValues = watch();
   const { data: options } = trpc.vehicles.options.useQuery();
+
+  // Lista estática de anos como fallback
+  const years = [2020, 2021, 2022, 2023, 2024];
+  const passengerCounts = [1, 2, 4, 6, 8];
+  const doorCounts = [2, 4, 5];
 
   return (
     <div className="space-y-6">
@@ -36,7 +41,7 @@ export function AdditionalFilters() {
             <SelectValue placeholder="Select minimum passengers" />
           </SelectTrigger>
           <SelectContent>
-            {[1, 2, 4, 6, 8].map((count) => (
+            {passengerCounts.map((count) => (
               <SelectItem key={count} value={String(count)}>
                 {count} {count === 1 ? 'passenger' : 'passengers'}
               </SelectItem>
@@ -85,18 +90,18 @@ export function AdditionalFilters() {
         </Select>
       </div>
 
-      {/* Year Filter */}
+      {/* Vehicle Year Filter */}
       <div className="space-y-2">
         <Label>Vehicle Year</Label>
         <Select
-          value={String(formValues.year || '')}
-          onValueChange={(value) => setValue('year', Number(value))}
+          value={String(formValues.year?.[0] || '')}
+          onValueChange={(value) => setValue('year', value ? [Number(value)] : [])}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select year" />
           </SelectTrigger>
           <SelectContent>
-            {[2020, 2021, 2022, 2023].map((year) => (
+            {years.map((year) => (
               <SelectItem key={year} value={String(year)}>
                 {year}
               </SelectItem>
@@ -116,7 +121,7 @@ export function AdditionalFilters() {
             <SelectValue placeholder="Select number of doors" />
           </SelectTrigger>
           <SelectContent>
-            {[2, 4, 5].map((doors) => (
+            {doorCounts.map((doors) => (
               <SelectItem key={doors} value={String(doors)}>
                 {doors} {doors === 1 ? 'door' : 'doors'}
               </SelectItem>
