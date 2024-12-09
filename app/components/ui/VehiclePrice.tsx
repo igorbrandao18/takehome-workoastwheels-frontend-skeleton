@@ -2,19 +2,19 @@ import { cn } from "@/lib/utils";
 
 interface VehiclePriceProps {
   price: string;
-  size?: 'sm' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   highlighted?: boolean;
 }
 
-export function VehiclePrice({ price, size = 'lg', highlighted = false }: VehiclePriceProps) {
+export function VehiclePrice({ price, size = 'md', highlighted = false }: VehiclePriceProps) {
   return (
     <div className={`
-      flex items-baseline 
-      ${size === 'lg' ? 'text-2xl' : 'text-lg'}
-      ${highlighted ? 'text-primary animate-pulse' : ''}
+      inline-flex items-center rounded-full px-3 py-1
+      ${highlighted ? 'bg-primary text-white' : 'bg-white text-primary'}
+      ${size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : 'text-base'}
+      font-semibold shadow-sm
     `}>
-      <span className="font-bold">{price}</span>
-      <span className="text-gray-500 text-sm ml-1">/hr</span>
+      {price}/hr
     </div>
   );
 } 

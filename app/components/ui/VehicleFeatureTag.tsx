@@ -1,18 +1,14 @@
+import { ReactNode } from 'react';
+
 interface VehicleFeatureTagProps {
-  children: React.ReactNode;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  children: ReactNode;
 }
 
-export function VehicleFeatureTag({ children, icon }: VehicleFeatureTagProps) {
+export function VehicleFeatureTag({ icon, children }: VehicleFeatureTagProps) {
   return (
-    <span className="
-      inline-flex items-center gap-1.5 
-      rounded-full bg-gray-100 px-2.5 py-0.5 
-      text-xs font-medium text-gray-800
-      transition-colors duration-200
-      hover:bg-gray-200
-    ">
-      {icon && <span className="text-gray-500">{icon}</span>}
+    <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+      {icon}
       {children}
     </span>
   );

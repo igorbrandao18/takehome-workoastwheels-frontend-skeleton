@@ -5,25 +5,35 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { trpc } from "@/lib/trpc";
 import { FormValues } from "./form";
 import { Label } from "../ui/label";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Users, Car, DollarSign, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function FilterSection() {
-  const { register, setValue, watch, reset } = useFormContext<FormValues>();
+  const { setValue, watch, reset } = useFormContext<FormValues>();
   const formValues = watch();
-
-  const { data: options } = trpc.vehicles.options.useQuery();
+  const { data: options, isLoading } = trpc.vehicles.options.useQuery();
 
   const defaultValues = {
     minPassengers: 1,
     classification: [],
     make: [],
     price: [10, 100],
-    page: 1
+    year: undefined,
+    doors: undefined,
+    page: 1,
+    startTime: "",
+    endTime: "",
+    startDate: new Date(),
+    endDate: new Date()
   };
 
   const handleReset = () => {
     reset(defaultValues);
   };
+
+  if (isLoading) {
+    return <p>Loading filters...</p>;
+  }
 
   return (
     <div className="space-y-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
@@ -33,29 +43,37 @@ export function FilterSection() {
           variant="outline"
           size="sm"
           onClick={handleReset}
-          className="text-sm"
+          className="text-sm hover:bg-gray-100"
         >
           <RotateCcw className="mr-2 h-4 w-4" />
           Reset Filters
         </Button>
       </div>
 
-      {/* Price Range Filter */}
-      <div className="space-y-2">
-        <Label>Hourly Price Range (${formValues.price?.[0]} - ${formValues.price?.[1]})</Label>
+      <div className="space-y-3">
+        <Label className="flex items-center gap-2">
+          <DollarSign className="w-4 h-4" />
+          Hourly Price Range (${formValues.price?.[0]} - ${formValues.price?.[1]})
+        </Label>
         <Slider
           defaultValue={[10, 100]}
           min={10}
           max={100}
           step={5}
-          value={formValues.price}
-          onValueChange={(value) => setValue('price', value)}
+          value={formValues.price || [10, 100]}
+          onValueChange={(value) => {
+            console.log('Slider Value Changed:', value);
+            setValue('price', value);
+          }}
+          className="w-full"
         />
       </div>
 
-      {/* Passenger Count Filter */}
-      <div className="space-y-2">
-        <Label>Minimum Passengers</Label>
+      <div className="space-y-3">
+        <Label className="flex items-center gap-2">
+          <Users className="w-4 h-4" />
+          Minimum Passengers
+        </Label>
         <Select
           value={String(formValues.minPassengers)}
           onValueChange={(value) => setValue('minPassengers', Number(value))}
@@ -65,17 +83,26 @@ export function FilterSection() {
           </SelectTrigger>
           <SelectContent>
             {[1, 2, 4, 6, 8].map((count) => (
-              <SelectItem key={count} value={String(count)}>
-                {count} {count === 1 ? 'passenger' : 'passengers'}
+              <SelectItem 
+                key={count} 
+                value={String(count)}
+                className={cn(
+                  "cursor-pointer",
+                  formValues.minPassengers === count && "bg-primary/5"
+                )}
+              >
+                {count} passengers
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Vehicle Classification Filter */}
-      <div className="space-y-2">
-        <Label>Vehicle Classification</Label>
+      <div className="space-y-3">
+        <Label className="flex items-center gap-2">
+          <Car className="w-4 h-4" />
+          Vehicle Classification
+        </Label>
         <Select
           value={formValues.classification?.[0] || ''}
           onValueChange={(value) => setValue('classification', value ? [value] : [])}
@@ -85,7 +112,14 @@ export function FilterSection() {
           </SelectTrigger>
           <SelectContent>
             {options?.classifications.map((classification) => (
-              <SelectItem key={classification} value={classification}>
+              <SelectItem 
+                key={classification} 
+                value={classification}
+                className={cn(
+                  "cursor-pointer",
+                  formValues.classification?.[0] === classification && "bg-primary/5"
+                )}
+              >
                 {classification}
               </SelectItem>
             ))}
@@ -93,9 +127,11 @@ export function FilterSection() {
         </Select>
       </div>
 
-      {/* Vehicle Make Filter */}
-      <div className="space-y-2">
-        <Label>Vehicle Make</Label>
+      <div className="space-y-3">
+        <Label className="flex items-center gap-2">
+          <Car className="w-4 h-4" />
+          Vehicle Make
+        </Label>
         <Select
           value={formValues.make?.[0] || ''}
           onValueChange={(value) => setValue('make', value ? [value] : [])}
@@ -105,8 +141,44 @@ export function FilterSection() {
           </SelectTrigger>
           <SelectContent>
             {options?.makes.map((make) => (
-              <SelectItem key={make} value={make}>
+              <SelectItem 
+                key={make} 
+                value={make}
+                className={cn(
+                  "cursor-pointer",
+                  formValues.make?.[0] === make && "bg-primary/5"
+                )}
+              >
                 {make}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-3">
+        <Label className="flex items-center gap-2">
+          <Calendar className="w-4 h-4" />
+          Vehicle Year
+        </Label>
+        <Select
+          value={String(formValues.year || '')}
+          onValueChange={(value) => setValue('year', Number(value))}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select year" />
+          </SelectTrigger>
+          <SelectContent>
+            {[2022, 2023, 2024].map((year) => (
+              <SelectItem 
+                key={year} 
+                value={String(year)}
+                className={cn(
+                  "cursor-pointer",
+                  formValues.year === year && "bg-primary/5"
+                )}
+              >
+                {year}
               </SelectItem>
             ))}
           </SelectContent>
