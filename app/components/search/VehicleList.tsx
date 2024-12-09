@@ -1,109 +1,123 @@
-import { Pagination, trpc } from "@/trpc.ts";
+import { trpc } from "@/lib/trpc";
 import { useFormContext } from "react-hook-form";
-import { combineDateTime, FormValues } from "@/components/search/form.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { FormValues } from "./form";
+import VehicleCard from "../VehicleCard";
+import { Button } from "../ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-function PaginationButtons({ data }: { data: Pagination }) {
-  const form = useFormContext<FormValues>();
-  const page = form.watch("page");
-
-  return (
-    <div className="flex justify-center mt-6">
-      <Button
-        variant="link"
-        onClick={() => form.setValue("page", page - 1)}
-        disabled={page === 1}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="link"
-        onClick={() => form.setValue("page", page + 1)}
-        disabled={page === data.totalPages}
-      >
-        Next
-      </Button>
-    </div>
-  );
+interface Vehicle {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  doors: number;
+  max_passengers: number;
+  classification: string;
+  thumbnail_url: string;
+  hourly_rate_cents: number;
 }
 
 export function VehicleList() {
-  const form = useFormContext<FormValues>();
-  const startDate = form.watch("startDate");
-  const startTime = form.watch("startTime");
-  const endDate = form.watch("endDate");
-  const endTime = form.watch("endTime");
-  const minPassengers = form.watch("minPassengers");
-  const classification = form.watch("classification");
-  const make = form.watch("make");
-  const price = form.watch("price");
-  const page = form.watch("page");
+  const { watch, setValue } = useFormContext<FormValues>();
+  const formValues = watch();
+  const [currentPage, setCurrentPage] = useState(formValues.page);
 
-  const startDateTime = useMemo(
-    () => combineDateTime(startDate, startTime),
-    [startDate, startTime],
-  );
-  const endDateTime = useMemo(
-    () => combineDateTime(endDate, endTime),
-    [endDate, endTime],
-  );
-
-  const [searchResponse] = trpc.vehicles.search.useSuspenseQuery(
-    {
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
-      page: Number(page),
-      passengerCount: Number(minPassengers),
-      classification: classification,
-      make: make,
-      priceMin: price[0],
-      priceMax: price[1],
+  const { data, isLoading, isError } = trpc.vehicles.search.useQuery({
+    page: currentPage,
+    limit: 10,
+    startTime: formValues.startDate.toISOString(),
+    endTime: formValues.endDate.toISOString(),
+    passengerCount: formValues.minPassengers,
+    classification: formValues.classification,
+    make: formValues.make,
+    priceMin: formValues.price[0],
+    priceMax: formValues.price[1],
+  }, {
+    retry: false,
+    onError: (error) => {
+      console.error('Search error:', error);
     },
-    {
-      keepPreviousData: true,
-    },
-  );
+  });
 
-  if (searchResponse.vehicles.length === 0) {
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    setValue('page', newPage);
+  };
+
+  const formatPrice = (cents: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  };
+
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-32">
-        <p className="text-muted-foreground">
-          No vehicles found. Try adjusting your search criteria.
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="w-full h-[320px] rounded-xl shadow-md animate-pulse bg-gray-200" />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError || !data || data.vehicles.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-semibold text-gray-700">No vehicles found</h2>
+        <p className="text-gray-500 mt-2">Try adjusting your filters to see more results</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <ul className="space-y-4">
-        {searchResponse.vehicles.map((vehicle) => {
-          const bookNowParams = new URLSearchParams({
-            id: vehicle.id,
-            start: startDateTime.toISOString(),
-            end: endDateTime.toISOString(),
-          });
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data.vehicles.map((vehicle: Vehicle) => (
+          <VehicleCard
+            key={vehicle.id}
+            thumbnail={vehicle.thumbnail_url}
+            make={vehicle.make}
+            model={vehicle.model}
+            year={vehicle.year}
+            classification={vehicle.classification}
+            doors={vehicle.doors}
+            price={formatPrice(vehicle.hourly_rate_cents)}
+            passengers={vehicle.max_passengers}
+            onReserve={() => {
+              console.log('Reserve vehicle:', vehicle.id);
+            }}
+            features={[
+              `${vehicle.doors} doors`,
+              `${vehicle.max_passengers} passengers`,
+              vehicle.classification,
+              `${vehicle.year} model`
+            ]}
+          />
+        ))}
+      </div>
 
-          return (
-            <div key={vehicle.id} className="flex gap-6 items-center">
-              {vehicle.make} {vehicle.model}
-              <Button asChild className="mt-2 w-full sm:w-auto">
-                <Link
-                  to={{
-                    pathname: "review",
-                    search: bookNowParams.toString(),
-                  }}
-                >
-                  Book now
-                </Link>
-              </Button>
-            </div>
-          );
-        })}
-      </ul>
-      <PaginationButtons data={searchResponse.pagination} />
+      <div className="flex justify-center gap-2 mt-8">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={!data.hasNextPage}
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }
