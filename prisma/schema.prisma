@@ -15,7 +15,7 @@ model Vehicle {
   doors             Int
   max_passengers    Int
   classification    String
-  thumbnail_url     String
+  thumbnail_url     String        // Mudou de thumbnail_urls para thumbnail_url
   hourly_rate_cents Int
   reservations      Reservation[]
 }

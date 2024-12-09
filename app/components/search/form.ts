@@ -1,12 +1,14 @@
 export interface FormValues {
   startDate: Date;
-  endDate: Date;
   startTime: string;
+  endDate: Date;
   endTime: string;
   minPassengers: number;
   classification: string[];
   make: string[];
   price: number[];
+  year?: number;
+  doors?: number;
   page: number;
 }
 

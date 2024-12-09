@@ -14,7 +14,6 @@ To get started, follow these steps:
 
 ### Additional commands
 
-- `npm run db:reset` to reset the database to the initial state
 - `npm run db:seed` to seed the database
 - `npm run db:studio` to open the Prisma Studio
 - `npm run lint` to run ESLint

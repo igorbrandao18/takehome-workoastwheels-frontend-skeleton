@@ -40,12 +40,20 @@ export function VehicleList() {
     classification: formValues.classification,
     make: formValues.make,
     price: formValues.price,
+    year: formValues.year,
+    doors: formValues.doors,
     page: currentPage,
   }, {
     retry: false,
     onError: (error) => {
       console.error('Search error:', error);
     },
+    onSuccess: (data) => {
+      console.log('Search results:', {
+        filters: formValues,
+        results: data
+      });
+    }
   });
 
   const handlePageChange = (newPage: number) => {

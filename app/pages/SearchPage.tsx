@@ -35,6 +35,8 @@ export function SearchPage() {
       classification: [],
       make: [],
       price: [10, 100],
+      year: undefined,
+      doors: undefined,
       page: 1,
     },
   });

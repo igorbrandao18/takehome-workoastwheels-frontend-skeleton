@@ -84,6 +84,46 @@ export function AdditionalFilters() {
           </SelectContent>
         </Select>
       </div>
+
+      {/* Year Filter */}
+      <div className="space-y-2">
+        <Label>Vehicle Year</Label>
+        <Select
+          value={String(formValues.year || '')}
+          onValueChange={(value) => setValue('year', Number(value))}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select year" />
+          </SelectTrigger>
+          <SelectContent>
+            {[2020, 2021, 2022, 2023].map((year) => (
+              <SelectItem key={year} value={String(year)}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Doors Filter */}
+      <div className="space-y-2">
+        <Label>Number of Doors</Label>
+        <Select
+          value={String(formValues.doors || '')}
+          onValueChange={(value) => setValue('doors', Number(value))}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select number of doors" />
+          </SelectTrigger>
+          <SelectContent>
+            {[2, 4, 5].map((doors) => (
+              <SelectItem key={doors} value={String(doors)}>
+                {doors} {doors === 1 ? 'door' : 'doors'}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

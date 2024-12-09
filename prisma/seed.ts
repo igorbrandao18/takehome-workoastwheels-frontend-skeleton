@@ -6,7 +6,8 @@ interface FleetVehicle {
   doors: number;
   max_passengers: number;
   classification: string;
-  thumbnail_url: string;
+  thumbnail_urls: string[];
+  year: number;
 }
 
 const NUM_VEHICLES = 100;
@@ -19,7 +20,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 4,
     max_passengers: 5,
     classification: "Compact",
-    thumbnail_url: "/cars/corolla.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Honda",
@@ -27,7 +33,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 4,
     max_passengers: 5,
     classification: "Compact",
-    thumbnail_url: "/cars/civic.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2023,
   },
   {
     make: "Ford",
@@ -35,7 +46,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 2,
     max_passengers: 4,
     classification: "Sports",
-    thumbnail_url: "/cars/mustang.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Chevrolet",
@@ -43,7 +59,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 4,
     max_passengers: 4,
     classification: "Subcompact",
-    thumbnail_url: "/cars/spark.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Nissan",
@@ -51,7 +72,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 5,
     classification: "SUV",
-    thumbnail_url: "/cars/rogue.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Hyundai",
@@ -59,7 +85,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 7,
     classification: "SUV",
-    thumbnail_url: "/cars/santafe.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Volkswagen",
@@ -67,7 +98,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 5,
     classification: "Compact",
-    thumbnail_url: "/cars/golf.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Mazda",
@@ -75,7 +111,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 7,
     classification: "SUV",
-    thumbnail_url: "/cars/cx9.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Chrysler",
@@ -83,7 +124,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 8,
     classification: "Minivan",
-    thumbnail_url: "/cars/pacifica.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "BMW",
@@ -91,7 +137,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 5,
     max_passengers: 7,
     classification: "Luxury SUV",
-    thumbnail_url: "/cars/x5.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Mercedes-Benz",
@@ -99,7 +150,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 4,
     max_passengers: 5,
     classification: "Luxury",
-    thumbnail_url: "/cars/cclass.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
   {
     make: "Jeep",
@@ -107,7 +163,12 @@ const FLEET_VEHICLES: FleetVehicle[] = [
     doors: 2,
     max_passengers: 4,
     classification: "Off-Road SUV",
-    thumbnail_url: "/cars/wrangler.png",
+    thumbnail_urls: [
+      "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618221196580-2f8e1f1b1b1b?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603481549420-7c1b2b1b1b1b?q=80&w=1000&auto=format&fit=crop"
+    ],
+    year: 2024,
   },
 ];
 
@@ -205,17 +266,18 @@ function pickRandomItem<T>(arr: T[]): T {
 
 async function createVehiclesAndReservations() {
   for (let i = 0; i < NUM_VEHICLES; i++) {
-    const fleetVehicle = pickRandomItem(FLEET_VEHICLES);
+    const fleetVehicle = FLEET_VEHICLES[i % FLEET_VEHICLES.length];
     const hourlyRateCents = priceFleetVehicle(fleetVehicle);
+    
     await prisma.vehicle.create({
       data: {
         make: fleetVehicle.make,
         model: fleetVehicle.model,
         doors: fleetVehicle.doors,
         max_passengers: fleetVehicle.max_passengers,
-        thumbnail_url: fleetVehicle.thumbnail_url,
+        thumbnail_url: fleetVehicle.thumbnail_urls.join(','),
         classification: fleetVehicle.classification,
-        year: pickRandomItem(MODEL_YEARS),
+        year: fleetVehicle.year,
         hourly_rate_cents: hourlyRateCents,
         reservations: {
           createMany: {
@@ -235,12 +297,12 @@ async function createVehiclesAndReservations() {
 
 async function checkDatabase() {
   try {
-    await prisma.vehicle.findMany();
-    await prisma.reservation.findMany();
+    const vehicles = await prisma.vehicle.findMany();
+    const reservations = await prisma.reservation.findMany();
+    console.log(`Found ${vehicles.length} vehicles and ${reservations.length} reservations.`);
   } catch (e) {
-    throw new Error(
-      "Error connecting to database. Have you run `npm run db:init`?",
-    );
+    console.error("Error connecting to database:", e);
+    throw new Error("Error connecting to database. Have you run `npm run db:init`?");
   }
 }
 

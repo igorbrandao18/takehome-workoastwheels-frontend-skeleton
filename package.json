@@ -11,9 +11,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "ts": "tsc --noEmit",
-    "db:init": "run-s db:reset db:seed",
-    "db:reset": "prisma migrate reset",
-    "db:seed": "prisma db seed",
+    "db:init": "prisma migrate reset --force && tsx prisma/seed.ts",
+    "db:reset": "prisma migrate reset --force && tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
   },
   "prisma": {
