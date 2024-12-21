@@ -1,22 +1,22 @@
-import path from "path";
-import react from "@vitejs/plugin-react-swc";
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./app"),
-    },
+      '@': path.resolve(__dirname, './src')
+    }
   },
   server: {
     proxy: {
-      "/trpc": {
-        target: "http://localhost:4000",
+      '/api': {
+        target: 'http://localhost:3000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/trpc/, ""),
-      },
-    },
-  },
+        secure: false
+      }
+    }
+  }
 });
