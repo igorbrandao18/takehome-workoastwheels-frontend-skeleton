@@ -600,7 +600,7 @@ async function main() {
       // Create images for the vehicle
       await prisma.$transaction(
         images.map(image => 
-          prisma.vehicle_images.create({
+          prisma.vehicleImage.create({
             data: {
               ...image,
               vehicleId: createdVehicle.id
@@ -613,7 +613,7 @@ async function main() {
     // Get all vehicles with their images
     const createdVehicles = await prisma.vehicle.findMany({
       include: {
-        vehicle_images: true
+        images: true
       }
     });
 
@@ -623,7 +623,7 @@ async function main() {
         id: v.id,
         model: v.model,
         plate: v.plate,
-        imageCount: v.vehicle_images.length
+        imageCount: v.images.length
       }))
     });
   } catch (error) {

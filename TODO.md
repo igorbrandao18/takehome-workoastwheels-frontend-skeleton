@@ -2,80 +2,80 @@
 
 ## Progresso por Camada (PROJECT-PROMPT.md)
 
-### Backend [95% de 60%]
-```
-Domain Layer [100% de 40%]
-├── Entities [100%]
-├── Value Objects [100%]
-├── Domain Services [100%]
-├── Aggregates [100%]
-└── Domain Events [100%]
+### Backend [0%]
 
-Application Layer [96% de 30%]
-├── Services [100%]
-├── DTOs [100%]
-├── Interfaces [100%]
-├── Use Cases [98%]
-│   ├── Reservation [100%]
-│   ├── Vehicle [100%]
-│   │   ├── ✅ CreateVehicleUseCase [100%]
-│   │   ├── ✅ UpdateVehicleUseCase [100%]
-│   │   ├── ✅ VehicleMaintenanceUseCase [100%]
-│   │   ├── ✅ VehicleInspectionUseCase [100%]
-│   │   └── ✅ VehicleRetirementUseCase [100%]
-│   └── Reports [100%]
-└── Event Handlers [100%]
+Domain Layer [0%]
+├── Entities [0%]
+├── Value Objects [0%]
+├── Domain Services [0%]
+├── Aggregates [0%]
+└── Domain Events [0%]
 
-Infrastructure Layer [100% de 20%]
-├── Repositories [100%]
-├── Database [100%]
-├── Logging [100%]
-└── External Services [100%]
+Application Layer [0%]
+├── Services [0%]
+├── DTOs [0%]
+├── Interfaces [0%]
+├── Use Cases [0%]
+│   ├── Reservation [0%]
+│   ├── Vehicle [0%]
+│   │   ├── ✅ CreateVehicleUseCase [0%]
+│   │   ├── ✅ UpdateVehicleUseCase [0%]
+│   │   ├── ✅ VehicleMaintenanceUseCase [0%]
+│   │   ├── ✅ VehicleInspectionUseCase [0%]
+│   │   └── ✅ VehicleRetirementUseCase [0%]
+│   └── Reports [0%]
+└── Event Handlers [0%]
 
-Presentation Layer [100% de 10%]
-├── Controllers [100%]
-├── Routes [100%]
-└── Middlewares [100%]
-```
+Infrastructure Layer [0%]
+├── Repositories [0%]
+├── Database [0%]
+├── Logging [0%]
+└── External Services [0%]
 
-### Frontend [95% de 40%]
-```
-Components [90%]
-├── Auth [80%]
-├── UI [90%]
-│   ├── ✅ Card [100%]
-│   └── ✅ Chart [100%]
-├── Vehicle [90%]
-└── Reservation [80%]
-
-Pages [95%]
-├── Auth [50%]
-├── Vehicle [100%]
-├── Reservation [100%]
-└── Admin [100%]
-    └── ✅ DashboardPage [100%]
-
-Features [95%]
-├── Authentication [100%]
-├── Vehicle Management [90%]
-├── Reservation System [80%]
-├── State Management [80%]
-└── Admin Dashboard [100%]
+Presentation Layer [0%]
+├── Controllers [0%]
+├── Routes [0%]
+└── Middlewares [0%]
 ```
 
-### Testing [45% de 10%]
+### Frontend [0%]
 ```
-Unit Tests [55%]
-├── Domain [100%]
-│   ├── ✅ Vehicle Entity [100%]
-│   └── ✅ TimeRange Value Object [100%]
-├── Application [50%]
-│   ├── Reservation [100%]
-│   │   ├── ✅ CreateReservationUseCase [100%]
-│   │   ├── ✅ CancelReservationUseCase [100%]
-│   │   └── ✅ CompleteReservationUseCase [100%]
-│   └── Vehicle [50%]
-│       └── ✅ CreateVehicleUseCase [100%]
+Components [0%]
+├── Auth [0%]
+├── UI [0%]
+│   ├── ✅ Card [0%]
+│   └── ✅ Chart [0%]
+├── Vehicle [0%]
+└── Reservation [0%]
+
+Pages [0%]
+├── Auth [0%]
+├── Vehicle [0%]
+├── Reservation [0%]
+└── Admin [0%]
+    └── ✅ DashboardPage [0%]
+
+Features [0%]
+├── Authentication [0%]
+├── Vehicle Management [0%]
+├── Reservation System [0%]
+├── State Management [0%]
+└── Admin Dashboard [0%]
+```
+
+### Testing [0%]
+```
+Unit Tests [0%]
+├── Domain [0%]
+│   ├── ✅ Vehicle Entity [0%]
+│   └── ✅ TimeRange Value Object [0%]
+├── Application [0%]
+│   ├── Reservation [0%]
+│   │   ├── ✅ CreateReservationUseCase [0%]
+│   │   ├── ✅ CancelReservationUseCase [0%]
+│   │   └── ✅ CompleteReservationUseCase [0%]
+│   └── Vehicle [0%]
+│       └── ✅ CreateVehicleUseCase [0%]
 ├── Infrastructure [0%]
 └── Presentation [0%]
 
@@ -83,24 +83,18 @@ Integration Tests [0%]
 E2E Tests [0%]
 ```
 
-## Progresso Total: 97.6%
-- Backend: 98% de 60% = 58.8%
-- Frontend: 95% de 40% = 38%
-- Testing: 45% de 10% = 0.8%
+## Progresso Total: 0%
+- Backend: 0% de 60% = 0%
+- Frontend: 0% de 40% = 0%
+- Testing: 0% de 10% = 0%
 
 ## Implementado
-1. Backend completo
-2. Frontend quase completo
-3. Testes de domínio
-4. Testes de use cases principais
-5. Gerenciamento de estado
+1. Nada implementado ainda
 
 ## Próximos Passos
-1. Completar Use Cases restantes
-2. Completar testes de Vehicle Use Cases
-3. Implementar testes de integração
-4. Implementar testes E2E
-5. Deploy
+1. Implementar Backend
+2. Implementar Frontend
+3. Implementar Testes
 
 ## Melhorias Técnicas
 1. Cobertura de testes
