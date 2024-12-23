@@ -1,145 +1,173 @@
 import { Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
 import { motion } from 'framer-motion';
+import { Car, Calendar, Shield, Star } from 'lucide-react';
 
-export function Home() {
+export default function Home() {
   return (
-    <div className="relative min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background pb-16 pt-[8rem] md:pb-20 lg:pb-24 xl:pb-32">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-grid-white/10" />
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative mx-auto max-w-7xl px-6 lg:px-8"
-        >
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
-              WorkoastWheels
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              Your premium vehicle rental service. Experience luxury, comfort, and reliability with our diverse fleet of well-maintained vehicles.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link to="/vehicles">
-                <Button size="lg" className="group relative overflow-hidden">
-                  <span className="relative z-10">Browse Vehicles</span>
-                  <div className="absolute inset-0 transform bg-primary transition-transform duration-300 group-hover:scale-x-110" />
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button variant="outline" size="lg" className="group">
+      <section className="relative min-h-[80vh] flex items-center">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">
+                  Premium Car Rental
+                </span>
+              </h1>
+              <p className="text-xl text-gray-300 mb-8">
+                Experience luxury and performance with our exclusive collection of premium vehicles
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/vehicles"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                >
+                  Browse Vehicles
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-8 py-4 border border-gray-600 hover:border-gray-400 rounded-lg font-semibold transition-colors"
+                >
                   Create Account
-                  <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </Button>
-              </Link>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Featured Cars */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+              {featuredCars.map((car, index) => (
+                <motion.div
+                  key={car.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-gray-800 rounded-lg overflow-hidden group hover:bg-gray-750 transition-colors"
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img
+                      src={car.image}
+                      alt={car.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{car.name}</h3>
+                    <p className="text-gray-400 mb-4">{car.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-400 font-semibold">${car.price}/day</span>
+                      <Link
+                        to={`/vehicles/${car.id}`}
+                        className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        View Details →
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </section>
 
       {/* Features Section */}
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mx-auto max-w-2xl text-center"
-        >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Why Choose WorkoastWheels?
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Experience the perfect blend of luxury, convenience, and reliability with our premium vehicle rental service.
-          </p>
-        </motion.div>
+      <section className="py-20 bg-gray-900/50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Why Choose Us</h2>
+              <p className="text-gray-400">Experience the best in luxury car rentals</p>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mx-auto mt-16 max-w-7xl sm:mt-20 lg:mt-24"
-        >
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                className="relative overflow-hidden rounded-2xl border bg-card p-8 shadow-lg transition-shadow hover:shadow-xl"
-              >
-                <div className="absolute right-4 top-4 text-4xl text-primary opacity-10">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                <p className="mt-4 text-muted-foreground">{feature.description}</p>
-              </motion.div>
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-gray-800 p-6 rounded-lg text-center"
+                >
+                  <div className="w-12 h-12 bg-blue-600/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
-      <div className="relative isolate mt-32 px-6 py-32 sm:mt-40 sm:py-40 lg:px-8">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-primary/5" />
-        </div>
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Ready to get started?
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-            Join thousands of satisfied customers who trust WorkoastWheels for their vehicle rental needs.
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+          <p className="text-xl mb-8 text-gray-100">
+            Join our exclusive membership and experience luxury driving today
           </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link to="/register">
-              <Button size="lg">Create your account</Button>
-            </Link>
-            <Link to="/vehicles">
-              <Button variant="outline" size="lg">
-                View vehicles
-              </Button>
-            </Link>
-          </div>
+          <Link
+            to="/register"
+            className="px-8 py-4 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
+          >
+            Create Account
+          </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
 
+const featuredCars = [
+  {
+    id: 1,
+    name: 'Porsche 911 GT3',
+    description: 'High-performance sports car with racing DNA',
+    price: '899',
+    image: '/cars/porsche.jpg'
+  },
+  {
+    id: 2,
+    name: 'Mercedes-AMG GT',
+    description: 'Luxury grand tourer with stunning performance',
+    price: '799',
+    image: '/cars/mercedes.jpg'
+  },
+  {
+    id: 3,
+    name: 'BMW M4 Competition',
+    description: 'Perfect blend of luxury and sportiness',
+    price: '699',
+    image: '/cars/bmw.jpg'
+  }
+];
+
 const features = [
   {
-    title: 'Wide Selection',
-    description: 'Choose from our diverse fleet of well-maintained vehicles, from luxury cars to practical SUVs.',
-    icon: '🚗'
-  },
-  {
-    title: 'Easy Booking',
-    description: 'Simple and fast online reservation process. Book your vehicle in minutes.',
-    icon: '📱'
-  },
-  {
-    title: '24/7 Support',
-    description: 'Round-the-clock customer service for your peace of mind.',
-    icon: '🛟'
+    title: 'Premium Fleet',
+    description: 'Access to luxury and exotic cars',
+    icon: <Car className="w-6 h-6 text-blue-400" />
   },
   {
     title: 'Flexible Rentals',
-    description: 'Daily, weekly, or monthly rentals available to suit your needs.',
-    icon: '📅'
+    description: 'Daily, weekly, or monthly options',
+    icon: <Calendar className="w-6 h-6 text-blue-400" />
   },
   {
-    title: 'Premium Service',
-    description: 'Enjoy a premium experience with our professional and friendly service.',
-    icon: '⭐'
+    title: 'Full Insurance',
+    description: 'Comprehensive coverage included',
+    icon: <Shield className="w-6 h-6 text-blue-400" />
   },
   {
-    title: 'Best Rates',
-    description: 'Competitive pricing with no hidden fees. Get the best value for your money.',
-    icon: '💰'
+    title: '24/7 Support',
+    description: 'Always here when you need us',
+    icon: <Star className="w-6 h-6 text-blue-400" />
   }
 ]; 

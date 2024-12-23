@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Layout } from './components/layout/Layout';
-import { Home } from './pages/Home';
+import Home from './pages/Home';
 import { Vehicles } from './pages/Vehicles';
 import { VehicleDetails } from './pages/VehicleDetails';
 import { Reservations } from './pages/Reservations';
