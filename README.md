@@ -27,7 +27,7 @@ Server will be running at http://localhost:3000
 
 1. In another terminal, start the frontend:
 ```bash
-npm run dev
+npm run dev:front
 ```
 Application will be available at http://localhost:5173
 
