@@ -1,34 +1,59 @@
 import axios from 'axios';
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-  headers: {
-    'Content-Type': 'application/json'
-  }
+const api = axios.create({
+  baseURL: 'http://localhost:3000'
 });
 
-// Add a request interceptor to add the auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+export interface VehicleImage {
+  id: string;
+  url: string;
+  type: string;
+  order: number;
+}
 
-// Add a response interceptor to handle errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+export interface Vehicle {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  plate: string;
+  status: string;
+  classification: string;
+  pricePerHour: number;
+  passengerCapacity: number;
+  specs: string | null;
+  features: string | null;
+  images: VehicleImage[];
+}
+
+export interface VehicleOptions {
+  makes: string[];
+  classifications: string[];
+  features: string[];
+}
+
+export const vehicleApi = {
+  getOptions: async () => {
+    const response = await api.get<VehicleOptions>('/vehicles/options');
+    return response.data;
+  },
+
+  search: async (params: {
+    classification?: string;
+    make?: string;
+    status?: string;
+    minPassengers?: number;
+    priceRange?: string;
+    featured?: boolean;
+  }) => {
+    const response = await api.get<Vehicle[]>('/vehicles/search', { params });
+    return response.data;
+  },
+
+  getById: async (id: string) => {
+    const response = await api.get<Vehicle>(`/vehicles/${id}`);
+    return response.data;
   }
-);
+};
+
+export default api;

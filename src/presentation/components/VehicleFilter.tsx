@@ -1,125 +1,135 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
-import { Label } from '../ui/label';
+import { useState, useEffect } from 'react';
+import { Slider } from '@mui/material';
+import { vehicleApi } from '../../lib/api';
 
-interface VehicleFilterProps {
+interface FilterProps {
   filters: {
     classification: string;
     priceRange: string;
     status: string;
+    make: string;
+    minPassengers: number;
   };
-  onFilterChange: (filters: {
-    classification: string;
-    priceRange: string;
-    status: string;
-  }) => void;
+  onFilterChange: (filters: any) => void;
 }
 
-const CLASSIFICATIONS = [
-  { value: '', label: 'All Classifications' },
-  { value: 'LUXURY', label: 'Luxury' },
-  { value: 'SPORTS', label: 'Sports' },
-  { value: 'SUPER_SPORTS', label: 'Super Sports' },
-  { value: 'ELECTRIC_PERFORMANCE', label: 'Electric Performance' },
-  { value: 'LUXURY_SUV', label: 'Luxury SUV' },
-  { value: 'ULTRA_LUXURY_SUV', label: 'Ultra Luxury SUV' },
-  { value: 'SUPER_SUV', label: 'Super SUV' },
-  { value: 'ELECTRIC_LUXURY', label: 'Electric Luxury' },
-  { value: 'CLASSIC_EXOTIC', label: 'Classic Exotic' },
-  { value: 'HYPER_SPORTS', label: 'Hyper Sports' }
-];
+export const VehicleFilter = ({ filters, onFilterChange }: FilterProps) => {
+  const [priceRange, setPriceRange] = useState<number[]>([0, 500]);
+  const [makes, setMakes] = useState<string[]>([]);
+  const [classifications, setClassifications] = useState<string[]>([]);
 
-const PRICE_RANGES = [
-  { value: '', label: 'All Prices' },
-  { value: '0-500', label: 'Up to $500/day' },
-  { value: '501-1000', label: '$501 - $1,000/day' },
-  { value: '1001-2000', label: '$1,001 - $2,000/day' },
-  { value: '2001-5000', label: '$2,001 - $5,000/day' },
-  { value: '5001-999999', label: 'Above $5,000/day' }
-];
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const data = await vehicleApi.getOptions();
+        setMakes(data.makes);
+        setClassifications(data.classifications);
+      } catch (error) {
+        console.error('Error fetching options:', error);
+      }
+    };
 
-const STATUS_OPTIONS = [
-  { value: '', label: 'All Status' },
-  { value: 'AVAILABLE', label: 'Available' },
-  { value: 'MAINTENANCE', label: 'In Maintenance' },
-  { value: 'RESERVED', label: 'Reserved' }
-];
+    fetchOptions();
+  }, []);
 
-export const VehicleFilter = ({ filters, onFilterChange }: VehicleFilterProps) => {
-  const handleChange = (field: keyof typeof filters) => (value: string) => {
-    onFilterChange({
-      ...filters,
-      [field]: value
-    });
+  const handlePriceChange = (_event: Event, newValue: number | number[]) => {
+    if (Array.isArray(newValue)) {
+      setPriceRange(newValue);
+      onFilterChange({
+        ...filters,
+        priceRange: `${newValue[0]}-${newValue[1]}`
+      });
+    }
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Classification Filter */}
-        <div className="space-y-2">
-          <Label htmlFor="classification">Classification</Label>
-          <Select
-            value={filters.classification}
-            onValueChange={handleChange('classification')}
-          >
-            <SelectTrigger id="classification">
-              <SelectValue placeholder="Select classification" />
-            </SelectTrigger>
-            <SelectContent>
-              {CLASSIFICATIONS.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <h2 className="text-xl font-bold mb-4">Filters</h2>
+      
+      {/* Make Filter */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Make
+        </label>
+        <select
+          value={filters.make}
+          onChange={(e) => onFilterChange({ ...filters, make: e.target.value })}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">All Makes</option>
+          {makes.map(make => (
+            <option key={make} value={make}>{make}</option>
+          ))}
+        </select>
+      </div>
 
-        {/* Price Range Filter */}
-        <div className="space-y-2">
-          <Label htmlFor="priceRange">Price Range</Label>
-          <Select
-            value={filters.priceRange}
-            onValueChange={handleChange('priceRange')}
-          >
-            <SelectTrigger id="priceRange">
-              <SelectValue placeholder="Select price range" />
-            </SelectTrigger>
-            <SelectContent>
-              {PRICE_RANGES.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Classification Filter */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Vehicle Class
+        </label>
+        <select
+          value={filters.classification}
+          onChange={(e) => onFilterChange({ ...filters, classification: e.target.value })}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">All Classes</option>
+          {classifications.map(classification => (
+            <option key={classification} value={classification}>
+              {classification.replace('_', ' ')}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {/* Status Filter */}
-        <div className="space-y-2">
-          <Label htmlFor="status">Status</Label>
-          <Select
-            value={filters.status}
-            onValueChange={handleChange('status')}
-          >
-            <SelectTrigger id="status">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              {STATUS_OPTIONS.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Price Range Filter */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Price per Hour (${priceRange[0]} - ${priceRange[1]})
+        </label>
+        <Slider
+          value={priceRange}
+          onChange={handlePriceChange}
+          valueLabelDisplay="auto"
+          min={0}
+          max={500}
+          step={10}
+        />
+      </div>
+
+      {/* Minimum Passengers Filter */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Minimum Passengers
+        </label>
+        <select
+          value={filters.minPassengers}
+          onChange={(e) => onFilterChange({ ...filters, minPassengers: Number(e.target.value) })}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value={0}>Any</option>
+          <option value={2}>2+</option>
+          <option value={4}>4+</option>
+          <option value={5}>5+</option>
+          <option value={7}>7+</option>
+        </select>
+      </div>
+
+      {/* Status Filter */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Status
+        </label>
+        <select
+          value={filters.status}
+          onChange={(e) => onFilterChange({ ...filters, status: e.target.value })}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">All</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="RESERVED">Reserved</option>
+          <option value="MAINTENANCE">In Maintenance</option>
+        </select>
       </div>
     </div>
   );

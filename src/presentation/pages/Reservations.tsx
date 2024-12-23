@@ -1,99 +1,124 @@
-import { useState } from 'react';
-import { useReservations } from '../../application/hooks/useReservations';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-type ReservationStatus = 'ALL' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
+interface Reservation {
+  id: string;
+  vehicleId: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: string;
+}
 
 export const Reservations = () => {
-  const { reservations, cancelReservation } = useReservations();
-  const [statusFilter, setStatusFilter] = useState<ReservationStatus>('ALL');
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const message = location.state?.message;
 
-  const filteredReservations = reservations?.filter(reservation => 
-    statusFilter === 'ALL' ? true : reservation.status === statusFilter
-  );
+  useEffect(() => {
+    // Load reservations from localStorage
+    const loadReservations = () => {
+      const savedReservations = localStorage.getItem('reservations');
+      if (savedReservations) {
+        setReservations(JSON.parse(savedReservations));
+      }
+      setLoading(false);
+    };
 
-  const handleCancel = async (reservationId: string) => {
-    try {
-      await cancelReservation(reservationId);
-    } catch (error) {
-      console.error('Failed to cancel reservation:', error);
-    }
+    loadReservations();
+  }, []);
+
+  const handleCancelReservation = (reservationId: string) => {
+    // Get current reservations
+    const currentReservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+    
+    // Update the status of the reservation to CANCELLED
+    const updatedReservations = currentReservations.map((res: Reservation) =>
+      res.id === reservationId ? { ...res, status: 'CANCELLED' } : res
+    );
+    
+    // Save back to localStorage
+    localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+    
+    // Update state
+    setReservations(updatedReservations);
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Your Reservations</h1>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as ReservationStatus)}
-          className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="ALL">All Reservations</option>
-          <option value="ACTIVE">Active</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELLED">Cancelled</option>
-        </select>
-      </div>
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+  };
 
-      {filteredReservations?.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">No reservations found.</p>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">My Reservations</h1>
+
+      {message && (
+        <div className="bg-green-50 text-green-700 p-4 rounded-lg mb-6">
+          {message}
+        </div>
+      )}
+
+      {reservations.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <p className="text-gray-600 text-lg">
+            You don't have any reservations yet.
+          </p>
         </div>
       ) : (
         <div className="grid gap-6">
-          {filteredReservations?.map(reservation => (
+          {reservations.map(reservation => (
             <div
               key={reservation.id}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md p-6"
             >
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div className="space-y-2">
-                  <h2 className="text-xl font-bold">{reservation.vehicle.model}</h2>
-                  <p className="text-gray-600">
-                    {new Date(reservation.startDate).toLocaleDateString()} -{' '}
-                    {new Date(reservation.endDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-600">
-                    Duration: {reservation.durationInDays} days
-                  </p>
-                  <p className="font-semibold">
-                    Total: ${reservation.totalPrice}
-                  </p>
-                </div>
-
-                <div className="text-right space-y-2">
-                  <span
-                    className={`inline-block px-3 py-1 rounded-full text-sm ${
-                      reservation.status === 'ACTIVE'
-                        ? 'bg-green-100 text-green-800'
-                        : reservation.status === 'COMPLETED'
-                        ? 'bg-gray-100 text-gray-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    {reservation.status}
-                  </span>
-
-                  {reservation.status === 'ACTIVE' && (
-                    <button
-                      onClick={() => handleCancel(reservation.id)}
-                      className="block w-full text-red-600 hover:text-red-700 text-sm"
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold">
+                      Reservation #{reservation.id.slice(0, 8)}
+                    </h3>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        reservation.status === 'PENDING'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : reservation.status === 'CANCELLED'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}
                     >
-                      Cancel Reservation
-                    </button>
-                  )}
+                      {reservation.status}
+                    </span>
+                  </div>
+                  <div className="text-gray-600">
+                    <p>From: {formatDate(reservation.startDate)}</p>
+                    <p>To: {formatDate(reservation.endDate)}</p>
+                  </div>
+                  <p className="font-semibold text-blue-600">
+                    Total: ${reservation.totalPrice.toFixed(2)}
+                  </p>
                 </div>
-              </div>
 
-              {reservation.vehicle.images?.[0] && (
-                <div className="mt-4">
-                  <img
-                    src={reservation.vehicle.images[0].url}
-                    alt={reservation.vehicle.model}
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                </div>
-              )}
+                {reservation.status === 'PENDING' && (
+                  <button
+                    onClick={() => handleCancelReservation(reservation.id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Cancel Reservation
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
