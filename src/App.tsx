@@ -1,33 +1,46 @@
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Layout } from './components/layout/Layout';
-import Home from './pages/Home';
-import { Vehicles } from './pages/Vehicles';
-import { VehicleDetails } from './pages/VehicleDetails';
-import { Reservations } from './pages/Reservations';
-import { Profile } from './pages/Profile';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { NotFound } from './pages/NotFound';
-import { ErrorFallback } from './components/ErrorFallback';
+import { Layout } from './presentation/layouts/Layout';
+import { Home } from './presentation/pages/Home';
+import { Vehicles } from './presentation/pages/Vehicles';
+import { VehicleDetails } from './presentation/pages/VehicleDetails';
+import { Reservations } from './presentation/pages/Reservations';
+import { Profile } from './presentation/pages/Profile';
+import { Login } from './presentation/pages/Login';
+import { Register } from './presentation/pages/Register';
+import { NotFound } from './presentation/pages/NotFound';
+import { ErrorFallback } from './presentation/components/ErrorFallback';
+import { PrivateRoute } from './presentation/components/PrivateRoute';
 
-function App() {
+export function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="vehicles" element={<Vehicles />} />
           <Route path="vehicles/:id" element={<VehicleDetails />} />
-          <Route path="reservations" element={<Reservations />} />
-          <Route path="profile" element={<Profile />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route
+            path="reservations"
+            element={
+              <PrivateRoute>
+                <Reservations />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </ErrorBoundary>
   );
-}
-
-export default App; 
+} 
