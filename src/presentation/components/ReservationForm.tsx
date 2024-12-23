@@ -34,9 +34,10 @@ export const ReservationForm = ({ vehicleId, pricePerHour }: ReservationFormProp
         endDate,
         status: 'ACTIVE'
       });
-      navigate('/vehicles');
-    } catch (err) {
-      setError('Failed to create reservation. Please try again.');
+      navigate('/reservations');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.error || 'Failed to create reservation. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

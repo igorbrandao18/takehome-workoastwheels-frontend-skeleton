@@ -95,6 +95,10 @@ app.post('/reservations', async (req, res) => {
       return res.status(404).json({ error: 'Vehicle not found' });
     }
 
+    // Calculate total price
+    const hours = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60));
+    const totalPrice = hours * vehicle.pricePerHour;
+
     // Check if vehicle is available
     const conflictingReservation = await prisma.reservation.findFirst({
       where: {
@@ -127,7 +131,8 @@ app.post('/reservations', async (req, res) => {
         vehicleId,
         startDate: start,
         endDate: end,
-        status
+        status,
+        totalPrice
       },
       include: {
         vehicle: {
