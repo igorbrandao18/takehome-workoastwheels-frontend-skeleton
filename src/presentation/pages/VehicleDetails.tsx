@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ImageGallery } from '../components/ImageGallery';
 import { ReservationForm } from '../components/ReservationForm';
-import { Vehicle, vehicleApi } from '../../lib/api';
+import { Vehicle, getVehicle } from '../../lib/api';
 
 export const VehicleDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +14,7 @@ export const VehicleDetails = () => {
     const fetchVehicle = async () => {
       try {
         if (!id) throw new Error('Vehicle ID is required');
-        const data = await vehicleApi.getById(id);
+        const data = await getVehicle(id);
         setVehicle(data);
         setLoading(false);
       } catch (err) {

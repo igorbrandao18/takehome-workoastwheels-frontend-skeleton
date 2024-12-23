@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Vehicle, vehicleApi } from '../../lib/api';
+import { Vehicle, getVehicles } from '../../lib/api';
 
 export const Home = () => {
   const [featuredVehicles, setFeaturedVehicles] = useState<Vehicle[]>([]);
@@ -9,7 +9,7 @@ export const Home = () => {
   useEffect(() => {
     const fetchFeaturedVehicles = async () => {
       try {
-        const data = await vehicleApi.search({ featured: true });
+        const data = await getVehicles({ featured: true });
         setFeaturedVehicles(data);
         setLoading(false);
       } catch (error) {

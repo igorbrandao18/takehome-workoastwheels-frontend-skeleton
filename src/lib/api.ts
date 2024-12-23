@@ -32,28 +32,27 @@ export interface VehicleOptions {
   features: string[];
 }
 
-export const vehicleApi = {
-  getOptions: async () => {
-    const response = await api.get<VehicleOptions>('/vehicles/options');
-    return response.data;
-  },
-
-  search: async (params: {
-    classification?: string;
-    make?: string;
-    status?: string;
-    minPassengers?: number;
-    priceRange?: string;
-    featured?: boolean;
-  }) => {
-    const response = await api.get<Vehicle[]>('/vehicles/search', { params });
-    return response.data;
-  },
-
-  getById: async (id: string) => {
-    const response = await api.get<Vehicle>(`/vehicles/${id}`);
-    return response.data;
-  }
+export const getVehicleOptions = async () => {
+  const response = await api.get<VehicleOptions>('/vehicles/options');
+  return response.data;
 };
 
+export const getVehicles = async (params: {
+  classification?: string;
+  make?: string;
+  status?: string;
+  minPassengers?: number;
+  priceRange?: string;
+  featured?: boolean;
+}) => {
+  const response = await api.get<Vehicle[]>('/vehicles/search', { params });
+  return response.data;
+};
+
+export const getVehicle = async (id: string) => {
+  const response = await api.get<Vehicle>(`/vehicles/${id}`);
+  return response.data;
+};
+
+export { api };
 export default api;

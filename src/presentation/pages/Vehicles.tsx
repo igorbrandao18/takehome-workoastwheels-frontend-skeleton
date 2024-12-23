@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VehicleCard } from '../components/VehicleCard';
 import { VehicleFilter } from '../components/VehicleFilter';
-import { Vehicle, vehicleApi } from '../../lib/api';
+import { Vehicle, getVehicles } from '../../lib/api';
 
 export const Vehicles = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -20,7 +20,7 @@ export const Vehicles = () => {
 
   const fetchVehicles = async () => {
     try {
-      const data = await vehicleApi.search(filters);
+      const data = await getVehicles(filters);
       setVehicles(data);
       setLoading(false);
     } catch (error) {

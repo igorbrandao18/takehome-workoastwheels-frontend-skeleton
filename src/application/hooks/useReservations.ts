@@ -73,5 +73,5 @@ export const useReservations = () => {
     createReservation,
     cancelReservation,
     refetch: fetchReservations
-  };
+  }; 
 }; 

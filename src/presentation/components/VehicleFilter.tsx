@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Slider } from '@mui/material';
-import { vehicleApi } from '../../lib/api';
+import { getVehicleOptions } from '../../lib/api';
 
 interface FilterProps {
   filters: {
@@ -21,7 +21,7 @@ export const VehicleFilter = ({ filters, onFilterChange }: FilterProps) => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const data = await vehicleApi.getOptions();
+        const data = await getVehicleOptions();
         setMakes(data.makes);
         setClassifications(data.classifications);
       } catch (error) {
