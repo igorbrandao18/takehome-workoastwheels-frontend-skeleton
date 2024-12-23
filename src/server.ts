@@ -2,122 +2,170 @@ import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 
-const app = express();
 const prisma = new PrismaClient();
-const port = process.env.PORT || 3000;
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Get vehicle options (makes, classifications, etc.)
+// Vehicle routes
 app.get('/vehicles/options', async (req, res) => {
   try {
     const vehicles = await prisma.vehicle.findMany();
-    
     const makes = [...new Set(vehicles.map(v => v.make))];
     const classifications = [...new Set(vehicles.map(v => v.classification))];
-    const features = [...new Set(vehicles.filter(v => v.features).map(v => v.features!.split(',').map(f => f.trim())).flat())];
-    
-    res.json({
-      makes,
-      classifications,
-      features
-    });
+    res.json({ makes, classifications });
   } catch (error) {
-    console.error('Error fetching vehicle options:', error);
     res.status(500).json({ error: 'Failed to fetch vehicle options' });
   }
 });
 
-// Search vehicles with filters
 app.get('/vehicles/search', async (req, res) => {
   try {
-    const {
-      classification,
-      make,
-      status,
-      minPassengers,
-      priceRange,
-      featured
-    } = req.query;
-
-    let whereClause: any = {};
-
-    if (classification) {
-      whereClause.classification = classification;
-    }
-
-    if (make) {
-      whereClause.make = make;
-    }
-
-    if (status) {
-      whereClause.status = status;
-    }
-
-    if (minPassengers) {
-      whereClause.passengerCapacity = {
-        gte: parseInt(minPassengers as string)
-      };
-    }
-
+    const { classification, make, status, minPassengers, priceRange } = req.query;
+    
+    let where: any = {};
+    
+    if (classification) where.classification = classification;
+    if (make) where.make = make;
+    if (status) where.status = status;
+    if (minPassengers) where.passengerCapacity = { gte: Number(minPassengers) };
     if (priceRange) {
       const [min, max] = (priceRange as string).split('-').map(Number);
-      whereClause.pricePerHour = {
-        gte: min,
-        lte: max
-      };
+      where.pricePerHour = { gte: min, lte: max };
     }
 
     const vehicles = await prisma.vehicle.findMany({
-      where: whereClause,
+      where,
       include: {
-        images: {
-          orderBy: {
-            order: 'asc'
-          }
-        }
+        images: true
       }
     });
 
-    if (featured === 'true') {
-      res.json(vehicles.slice(0, 3));
-    } else {
-      res.json(vehicles);
-    }
+    res.json(vehicles);
   } catch (error) {
-    console.error('Error searching vehicles:', error);
     res.status(500).json({ error: 'Failed to search vehicles' });
   }
 });
 
-// Get vehicle by ID
 app.get('/vehicles/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
     const vehicle = await prisma.vehicle.findUnique({
       where: { id },
       include: {
-        images: {
-          orderBy: {
-            order: 'asc'
-          }
-        }
+        images: true
       }
     });
-
+    
     if (!vehicle) {
       return res.status(404).json({ error: 'Vehicle not found' });
     }
 
     res.json(vehicle);
   } catch (error) {
-    console.error('Error fetching vehicle:', error);
     res.status(500).json({ error: 'Failed to fetch vehicle' });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Reservation routes
+app.post('/reservations', async (req, res) => {
+  try {
+    const { vehicleId, startDate, endDate, status } = req.body;
+
+    // Validate dates
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const now = new Date();
+
+    if (start < now) {
+      return res.status(400).json({ error: 'Start date must be in the future' });
+    }
+
+    if (end <= start) {
+      return res.status(400).json({ error: 'End date must be after start date' });
+    }
+
+    // Check if vehicle exists
+    const vehicle = await prisma.vehicle.findUnique({
+      where: { id: vehicleId }
+    });
+
+    if (!vehicle) {
+      return res.status(404).json({ error: 'Vehicle not found' });
+    }
+
+    // Check if vehicle is available
+    const conflictingReservation = await prisma.reservation.findFirst({
+      where: {
+        vehicleId,
+        status: 'ACTIVE',
+        OR: [
+          {
+            AND: [
+              { startDate: { lte: start } },
+              { endDate: { gte: start } }
+            ]
+          },
+          {
+            AND: [
+              { startDate: { lte: end } },
+              { endDate: { gte: end } }
+            ]
+          }
+        ]
+      }
+    });
+
+    if (conflictingReservation) {
+      return res.status(400).json({ error: 'Vehicle is not available for these dates' });
+    }
+
+    // Create reservation
+    const reservation = await prisma.reservation.create({
+      data: {
+        vehicleId,
+        startDate: start,
+        endDate: end,
+        status
+      },
+      include: {
+        vehicle: {
+          include: {
+            images: true
+          }
+        }
+      }
+    });
+
+    res.json(reservation);
+  } catch (error) {
+    console.error('Reservation error:', error);
+    res.status(500).json({ error: 'Failed to create reservation' });
+  }
+});
+
+app.get('/reservations', async (req, res) => {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      include: {
+        vehicle: {
+          include: {
+            images: true
+          }
+        }
+      },
+      orderBy: {
+        startDate: 'desc'
+      }
+    });
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch reservations' });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 }); 

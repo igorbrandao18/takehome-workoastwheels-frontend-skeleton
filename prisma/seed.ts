@@ -22,6 +22,34 @@ interface VehicleData {
   images: VehicleImageData[];
 }
 
+const WORKING_IMAGES = {
+  exterior: [
+    "https://images.unsplash.com/photo-1549399542-7e3f8b79c341",
+    "https://images.unsplash.com/photo-1555215695-3004980ad54e",
+    "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d",
+    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7"
+  ],
+  interior: [
+    "https://images.unsplash.com/photo-1583121274602-3e2820c69888",
+    "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
+    "https://images.unsplash.com/photo-1511919884226-fd3cad34687c",
+    "https://images.unsplash.com/photo-1542362567-b07e54358753"
+  ],
+  detail: [
+    "https://images.unsplash.com/photo-1544829728-e5ca3e8dd4c9",
+    "https://images.unsplash.com/photo-1556189250-72ba954cfc2b",
+    "https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd",
+    "https://images.unsplash.com/photo-1562911791-c7a97b729ec5"
+  ]
+};
+
+const getRandomImages = () => ({
+  exterior1: WORKING_IMAGES.exterior[Math.floor(Math.random() * WORKING_IMAGES.exterior.length)],
+  exterior2: WORKING_IMAGES.exterior[Math.floor(Math.random() * WORKING_IMAGES.exterior.length)],
+  interior: WORKING_IMAGES.interior[Math.floor(Math.random() * WORKING_IMAGES.interior.length)],
+  detail: WORKING_IMAGES.detail[Math.floor(Math.random() * WORKING_IMAGES.detail.length)]
+});
+
 const vehicles: VehicleData[] = [
   // Luxury Cars
   {
@@ -35,7 +63,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 5,
     specs: "523 hp, 4.4s 0-60mph, Luxury Interior",
     features: "Massage Seats, Night Vision, Executive Package",
-    images: [{ url: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "BMW",
@@ -48,7 +84,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 5,
     specs: "536 hp, 4.1s 0-60mph, Executive Comfort",
     features: "Theater Screen, Sky Lounge, Executive Lounge",
-    images: [{ url: "https://images.unsplash.com/photo-1555215695-3004980ad54e", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Rolls-Royce",
@@ -61,7 +105,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 5,
     specs: "563 hp, 4.6s 0-60mph, Ultimate Luxury",
     features: "Starlight Headliner, Champagne Cooler, Bespoke Audio",
-    images: [{ url: "https://images.unsplash.com/photo-1631295868223-63265b40d9e4", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Electric Vehicles
@@ -76,7 +128,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 5,
     specs: "1,020 hp, 1.99s 0-60mph, 396mi Range",
     features: "Autopilot, Gaming Computer, Premium Connectivity",
-    images: [{ url: "https://images.unsplash.com/photo-1617788138017-80ad40651399", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Porsche",
@@ -89,7 +149,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 4,
     specs: "750 hp, 2.6s 0-60mph, 201mi Range",
     features: "Performance Battery Plus, Sport Chrono, Ceramic Brakes",
-    images: [{ url: "https://images.unsplash.com/photo-1619767886558-efdc259b6e09", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Sports Cars
@@ -104,7 +172,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "502 hp, 3.2s 0-60mph, Track-Ready",
     features: "PDK Transmission, Carbon Ceramic Brakes, Sport Chrono",
-    images: [{ url: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Ferrari",
@@ -117,7 +193,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "710 hp, 2.9s 0-60mph, Twin-Turbo V8",
     features: "Carbon Fiber Racing Seats, Launch Control, Ferrari Dynamic Enhancer",
-    images: [{ url: "https://images.unsplash.com/photo-1592198084033-aade902d1aae", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // SUVs
@@ -132,7 +216,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 7,
     specs: "523 hp, 4.3s 0-60mph, All-Terrain Capability",
     features: "Dynamic Air Suspension, Terrain Response 2, Meridian Sound",
-    images: [{ url: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Lamborghini",
@@ -145,7 +237,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 5,
     specs: "641 hp, 3.5s 0-60mph, Super SUV",
     features: "ANIMA Selector, Carbon Ceramic Brakes, B&O Sound System",
-    images: [{ url: "https://images.unsplash.com/photo-1621136824023-49cb067dd9f4", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Classic Cars
@@ -160,7 +260,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 4,
     specs: "320 hp, V8 Engine, Restored Condition",
     features: "Manual Transmission, Original Interior, Modern Sound System",
-    images: [{ url: "https://images.unsplash.com/photo-1567784177951-6fa58317e16b", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Chevrolet",
@@ -173,7 +281,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "360 hp, Split Window, Collector's Item",
     features: "4-Speed Manual, Original Paint, Show Car Quality",
-    images: [{ url: "https://images.unsplash.com/photo-1603553329474-99f95f35394f", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Modern Classics
@@ -188,7 +304,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 4,
     specs: "333 hp, 6-Speed Manual, Track-Ready",
     features: "Competition Package, Harman Kardon Sound, Sport Seats",
-    images: [{ url: "https://images.unsplash.com/photo-1619362280286-f1f8fd5032ed", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Porsche",
@@ -201,7 +325,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "415 hp, Mezger Engine, Racing Heritage",
     features: "Clubsport Package, Carbon Fiber Parts, Limited Edition",
-    images: [{ url: "https://images.unsplash.com/photo-1611821064430-0d40291d0f0b", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Exotic Cars
@@ -216,7 +348,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "710 hp, 2.8s 0-60mph, Carbon Fiber Monocage",
     features: "Variable Drift Control, Track Telemetry, Bowers & Wilkins Audio",
-    images: [{ url: "https://images.unsplash.com/photo-1621135802920-133df287f89c", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Bugatti",
@@ -229,7 +369,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "1,500 hp, 2.4s 0-60mph, Quad-Turbo W16",
     features: "Top Speed Mode, Telemetry Recording, Custom Interior",
-    images: [{ url: "https://images.unsplash.com/photo-1617654112368-307921291f42", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
 
   // Vintage Cars
@@ -244,7 +392,15 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "265 hp, Inline-6, Concours Condition",
     features: "Original Toolkit, Heritage Certificate, Show Winner",
-    images: [{ url: "https://images.unsplash.com/photo-1621952906493-5e351ca0d0a1", type: "exterior", order: 1 }]
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
   },
   {
     make: "Mercedes-Benz",
@@ -257,11 +413,28 @@ const vehicles: VehicleData[] = [
     passengerCapacity: 2,
     specs: "215 hp, Fuel-Injected, Iconic Design",
     features: "Gullwing Doors, Original Interior, Museum Quality",
-    images: [{ url: "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f", type: "exterior", order: 1 }]
-  },
-
-  // Add more vehicles here...
+    images: (() => {
+      const imgs = getRandomImages();
+      return [
+        { url: imgs.exterior1, type: "exterior", order: 1 },
+        { url: imgs.interior, type: "interior", order: 2 },
+        { url: imgs.detail, type: "detail", order: 3 },
+        { url: imgs.exterior2, type: "exterior", order: 4 }
+      ];
+    })()
+  }
 ];
+
+// Update all vehicles to use random working images
+vehicles.forEach(vehicle => {
+  const imgs = getRandomImages();
+  vehicle.images = [
+    { url: imgs.exterior1, type: "exterior", order: 1 },
+    { url: imgs.interior, type: "interior", order: 2 },
+    { url: imgs.detail, type: "detail", order: 3 },
+    { url: imgs.exterior2, type: "exterior", order: 4 }
+  ];
+});
 
 async function main() {
   try {

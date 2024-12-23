@@ -1,46 +1,39 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../application/hooks/useAuth';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    return location.pathname === path ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600';
+  };
 
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-xl font-bold">
+          <Link to="/" className="text-2xl font-bold text-blue-600">
             WorkoastWheels
           </Link>
-          
-          <div className="flex space-x-4">
-            <Link to="/vehicles" className="text-gray-700 hover:text-gray-900">
+
+          <div className="flex space-x-8">
+            <Link
+              to="/"
+              className={`font-medium transition-colors ${isActive('/')}`}
+            >
+              Home
+            </Link>
+            <Link
+              to="/vehicles"
+              className={`font-medium transition-colors ${isActive('/vehicles')}`}
+            >
               Vehicles
             </Link>
-            {isAuthenticated ? (
-              <>
-                <Link to="/reservations" className="text-gray-700 hover:text-gray-900">
-                  Reservations
-                </Link>
-                <Link to="/profile" className="text-gray-700 hover:text-gray-900">
-                  Profile
-                </Link>
-                <button
-                  onClick={logout}
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="text-gray-700 hover:text-gray-900">
-                  Login
-                </Link>
-                <Link to="/register" className="text-gray-700 hover:text-gray-900">
-                  Register
-                </Link>
-              </>
-            )}
+            <Link
+              to="/reservations"
+              className={`font-medium transition-colors ${isActive('/reservations')}`}
+            >
+              My Reservations
+            </Link>
           </div>
         </div>
       </div>
