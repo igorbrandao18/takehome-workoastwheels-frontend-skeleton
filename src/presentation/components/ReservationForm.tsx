@@ -31,9 +31,10 @@ export const ReservationForm = ({ vehicleId, pricePerHour }: ReservationFormProp
       await api.post('/reservations', {
         vehicleId,
         startDate,
-        endDate
+        endDate,
+        status: 'ACTIVE'
       });
-      navigate('/reservations');
+      navigate('/vehicles');
     } catch (err) {
       setError('Failed to create reservation. Please try again.');
     } finally {
