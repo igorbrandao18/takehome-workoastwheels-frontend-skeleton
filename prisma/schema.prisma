@@ -29,12 +29,29 @@ model Vehicle {
   year           Int
   status         String   @default("AVAILABLE")
   classification String
+  pricePerDay    Int      @default(0)
+  specs          String?
+  features       String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  images       VehicleImage[]
   reservations Reservation[]
 
   @@map("vehicles")
+}
+
+model VehicleImage {
+  id        String   @id @default(uuid())
+  url       String
+  type      String   // exterior, interior, detail, etc.
+  order     Int      // para controlar a ordem das imagens
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("vehicle_images")
 }
 
 model Reservation {
