@@ -13,6 +13,7 @@ model User {
   email     String   @unique
   password  String
   role      String   @default("USER")
+  active    Boolean  @default(true)
   status    String   @default("ACTIVE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -23,20 +24,19 @@ model User {
 }
 
 model Vehicle {
-  id             String   @id @default(uuid())
+  id             String         @id @default(uuid())
   model          String
-  plate          String   @unique
+  plate          String         @unique
   year           Int
-  status         String   @default("AVAILABLE")
+  status         String         @default("AVAILABLE")
   classification String
-  pricePerDay    Int      @default(0)
+  pricePerDay    Int           @default(0)
   specs          String?
   features       String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  images       VehicleImage[]
-  reservations Reservation[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  images         VehicleImage[]
+  reservations   Reservation[]
 
   @@map("vehicles")
 }
@@ -44,8 +44,8 @@ model Vehicle {
 model VehicleImage {
   id        String   @id @default(uuid())
   url       String
-  type      String   // exterior, interior, detail, etc.
-  order     Int      // para controlar a ordem das imagens
+  type      String
+  order     Int
   vehicleId String
   vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
   createdAt DateTime @default(now())

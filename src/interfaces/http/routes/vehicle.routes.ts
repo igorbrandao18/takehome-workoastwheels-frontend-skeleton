@@ -1,16 +1,17 @@
 import { Router } from 'express';
 import { VehicleController } from '../controllers/vehicle.controller';
+import { authMiddleware, adminMiddleware } from '../middlewares/auth.middleware';
 
-const router = Router();
+const vehicleRouter = Router();
 const vehicleController = new VehicleController();
 
-// Get all vehicles
-router.get('/', vehicleController.findAll);
+// Public routes
+vehicleRouter.get('/', vehicleController.getAllVehicles);
+vehicleRouter.get('/:id', vehicleController.getVehicleById);
 
-// Get vehicle by id
-router.get('/:id', vehicleController.findById);
+// Protected routes
+vehicleRouter.post('/', authMiddleware, adminMiddleware, vehicleController.createVehicle);
+vehicleRouter.put('/:id', authMiddleware, adminMiddleware, vehicleController.updateVehicle);
+vehicleRouter.delete('/:id', authMiddleware, adminMiddleware, vehicleController.deleteVehicle);
 
-// Update vehicle status
-router.patch('/:id/status', vehicleController.updateStatus);
-
-export default router; 
+export { vehicleRouter }; 

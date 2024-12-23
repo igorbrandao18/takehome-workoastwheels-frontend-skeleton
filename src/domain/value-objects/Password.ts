@@ -1,47 +1,26 @@
-import { ValueObject } from '../shared/ValueObject';
-import { ValidationError } from '../errors/ValidationError';
-import * as bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
-export class Password extends ValueObject {
-    private readonly _hash: string;
+export class Password {
+  private constructor(private readonly value: string) {}
 
-    constructor(value: string, isHashed: boolean = false) {
-        super();
-        this.validate(value);
-        this._hash = isHashed ? value : this.hashPassword(value);
+  static async create(password: string): Promise<Password> {
+    if (!password || password.length < 6) {
+      throw new Error('Password must be at least 6 characters long');
     }
 
-    get value(): string {
-        return this._hash;
-    }
+    const hashedPassword = await bcryptjs.hash(password, 8);
+    return new Password(hashedPassword);
+  }
 
-    protected validate(value: unknown): void {
-        if (typeof value !== 'string') {
-            throw new ValidationError('Password must be a string');
-        }
+  static async fromHashed(hashedPassword: string): Promise<Password> {
+    return new Password(hashedPassword);
+  }
 
-        if (!value) {
-            throw new ValidationError('Password is required');
-        }
+  async compare(plainPassword: string): Promise<boolean> {
+    return bcryptjs.compare(plainPassword, this.value);
+  }
 
-        if (!this.isHashed(value) && value.length < 8) {
-            throw new ValidationError('Password must be at least 8 characters long');
-        }
-    }
-
-    private hashPassword(password: string): string {
-        return bcrypt.hashSync(password, 10);
-    }
-
-    verifyPassword(plainPassword: string): boolean {
-        return bcrypt.compareSync(plainPassword, this._hash);
-    }
-
-    private isHashed(value: string): boolean {
-        return value.startsWith('$2b$') || value.startsWith('$2a$');
-    }
-
-    toString(): string {
-        return '[PROTECTED]';
-    }
+  toString(): string {
+    return this.value;
+  }
 } 

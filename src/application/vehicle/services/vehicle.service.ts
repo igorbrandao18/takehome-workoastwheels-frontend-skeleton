@@ -4,72 +4,133 @@ const prisma = new PrismaClient();
 
 export class VehicleService {
   async findAll() {
-    const vehicles = await prisma.vehicle.findMany({
+    return prisma.vehicle.findMany({
       include: {
-        images: {
-          orderBy: {
-            order: 'asc'
-          }
-        }
+        images: true
       }
     });
-
-    return vehicles.map(vehicle => ({
-      id: vehicle.id,
-      name: vehicle.model,
-      type: vehicle.classification,
-      status: vehicle.status,
-      pricePerDay: vehicle.pricePerDay,
-      specs: vehicle.specs,
-      features: vehicle.features,
-      year: vehicle.year,
-      imageUrl: vehicle.images[0]?.url || '',
-      images: vehicle.images.map(image => ({
-        url: image.url,
-        type: image.type
-      }))
-    }));
   }
 
   async findById(id: string) {
-    const vehicle = await prisma.vehicle.findUnique({
+    return prisma.vehicle.findUnique({
       where: { id },
       include: {
-        images: {
-          orderBy: {
-            order: 'asc'
-          }
-        }
+        images: true
       }
     });
-
-    if (!vehicle) {
-      throw new Error('Vehicle not found');
-    }
-
-    return {
-      id: vehicle.id,
-      name: vehicle.model,
-      type: vehicle.classification,
-      status: vehicle.status,
-      pricePerDay: vehicle.pricePerDay,
-      specs: vehicle.specs,
-      features: vehicle.features,
-      year: vehicle.year,
-      imageUrl: vehicle.images[0]?.url || '',
-      images: vehicle.images.map(image => ({
-        url: image.url,
-        type: image.type
-      }))
-    };
   }
 
-  async updateStatus(id: string, status: string) {
-    const vehicle = await prisma.vehicle.update({
-      where: { id },
-      data: { status }
+  async create(data: {
+    model: string;
+    plate: string;
+    year: number;
+    pricePerDay: number;
+    classification: string;
+    specifications: any;
+    features: string[];
+    images: { url: string; type: string; order: number }[];
+  }) {
+    const invalidImages = data.images.filter(img => !isValidImageUrl(img.url));
+    if (invalidImages.length > 0) {
+      throw new Error('Invalid image URLs provided');
+    }
+
+    const existingVehicle = await prisma.vehicle.findUnique({
+      where: { plate: data.plate }
     });
 
-    return vehicle;
+    if (existingVehicle) {
+      throw new Error('Plate already exists');
+    }
+
+    return prisma.vehicle.create({
+      data: {
+        model: data.model,
+        plate: data.plate,
+        year: data.year,
+        pricePerDay: data.pricePerDay,
+        classification: data.classification,
+        specifications: data.specifications,
+        features: data.features,
+        images: {
+          create: data.images
+        }
+      },
+      include: {
+        images: true
+      }
+    });
+  }
+
+  async update(id: string, data: {
+    model?: string;
+    plate?: string;
+    year?: number;
+    pricePerDay?: number;
+    classification?: string;
+    specifications?: any;
+    features?: string[];
+    images?: { url: string; type: string; order: number }[];
+  }) {
+    if (data.plate) {
+      const existingVehicle = await prisma.vehicle.findFirst({
+        where: {
+          plate: data.plate,
+          NOT: {
+            id
+          }
+        }
+      });
+
+      if (existingVehicle) {
+        throw new Error('Plate already exists');
+      }
+    }
+
+    if (data.images) {
+      await prisma.vehicleImage.deleteMany({
+        where: { vehicleId: id }
+      });
+    }
+
+    return prisma.vehicle.update({
+      where: { id },
+      data: {
+        ...(data.model && { model: data.model }),
+        ...(data.plate && { plate: data.plate }),
+        ...(data.year && { year: data.year }),
+        ...(data.pricePerDay && { pricePerDay: data.pricePerDay }),
+        ...(data.classification && { classification: data.classification }),
+        ...(data.specifications && { specifications: data.specifications }),
+        ...(data.features && { features: data.features }),
+        ...(data.images && {
+          images: {
+            create: data.images
+          }
+        })
+      },
+      include: {
+        images: true
+      }
+    });
+  }
+
+  async delete(id: string) {
+    await prisma.vehicleImage.deleteMany({
+      where: { vehicleId: id }
+    });
+
+    return prisma.vehicle.delete({
+      where: { id }
+    });
+  }
+}
+
+function isValidImageUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return url.match(/\.(jpg|jpeg|png|webp)$/i) !== null;
+  } catch {
+    return false;
   }
 } 
