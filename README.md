@@ -8,7 +8,7 @@ Welcome to Workoast's take-home project! This project is a facsimile for a renta
 
 To get started, follow these steps:
 
-Obs: run project frontend command: yarn install && yarn dev:app
+### : run project frontend command: yarn install && yarn dev:app
 
 1. Install dependencies with `npm install`
 2. Create and seed the database with `npm run db:init`
