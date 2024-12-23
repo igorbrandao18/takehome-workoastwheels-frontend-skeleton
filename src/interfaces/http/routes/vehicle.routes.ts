@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import { VehicleController } from '../controllers/vehicle.controller';
-import { authMiddleware, adminMiddleware } from '../middlewares/auth.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const vehicleRouter = Router();
 const vehicleController = new VehicleController();
 
-// Public routes
-vehicleRouter.get('/', vehicleController.getAllVehicles);
-vehicleRouter.get('/:id', vehicleController.getVehicleById);
+vehicleRouter.get('/', vehicleController.findAll);
+vehicleRouter.get('/options', vehicleController.getOptions);
+vehicleRouter.get('/:id', vehicleController.findById);
 
-// Protected routes
-vehicleRouter.post('/', authMiddleware, adminMiddleware, vehicleController.createVehicle);
-vehicleRouter.put('/:id', authMiddleware, adminMiddleware, vehicleController.updateVehicle);
-vehicleRouter.delete('/:id', authMiddleware, adminMiddleware, vehicleController.deleteVehicle);
+vehicleRouter.use(authMiddleware);
+vehicleRouter.post('/', vehicleController.create);
+vehicleRouter.put('/:id', vehicleController.update);
+vehicleRouter.delete('/:id', vehicleController.delete);
 
 export { vehicleRouter }; 

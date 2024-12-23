@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -n \"FRONT,BACK\" -c \"blue,green\" \"npm run dev:front\" \"npm run dev:back\"",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -13,7 +13,11 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "dev:front": "vite",
+    "dev:back": "tsx watch src/server.ts",
+    "setup": "npm install && npx prisma generate && npx prisma db push && npx prisma db seed",
+    "start": "npm run setup && npm run dev"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -25,16 +29,17 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-label": "^2.0.2",
-    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-separator": "^1.0.3",
-    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-slider": "^1.2.2",
+    "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.1.5",
     "@tanstack/react-query": "^5.14.2",
     "@tanstack/react-query-devtools": "^5.14.5",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "date-fns": "^3.0.6",
     "express": "^4.18.2",
@@ -49,7 +54,7 @@
     "react-hook-form": "^7.49.2",
     "react-router-dom": "^6.21.0",
     "sonner": "^1.7.1",
-    "tailwind-merge": "^2.1.0",
+    "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4",
     "zustand": "^5.0.2"

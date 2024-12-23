@@ -1,16 +1,16 @@
-import { PrismaClient } from '@prisma/client';
-import * as bcryptjs from 'bcryptjs';
+import { PrismaClient, Prisma } from '@prisma/client';
+import bcryptjs from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-// Define a interface correta para as imagens
+// Interface para as imagens
 interface VehicleImageData {
   url: string;
   type: string;
   order: number;
 }
 
-// Define a interface para o veículo com todos os campos necessários
+// Interface para os veículos
 interface VehicleData {
   model: string;
   plate: string;
@@ -18,8 +18,8 @@ interface VehicleData {
   status: string;
   classification: string;
   pricePerDay: number;
-  specs: string;
-  features: string;
+  specs: string | null;
+  features: string | null;
   images: VehicleImageData[];
 }
 
@@ -594,35 +594,26 @@ async function main() {
     for (const vehicle of vehicles) {
       const { images, ...vehicleData } = vehicle;
       
-      // Create vehicle first
+      // Create vehicle with nested create
       const createdVehicle = await prisma.vehicle.create({
-        data: vehicleData
+        data: {
+          ...vehicleData,
+          images: {
+            create: images
+          }
+        },
+        include: {
+          images: true
+        }
       });
 
-      // Then create the images
-      await Promise.all(
-        images.map(image => 
-          prisma.$transaction(async () => {
-            await prisma.vehicleImage.create({
-              data: {
-                ...image,
-                vehicleId: createdVehicle.id
-              }
-            });
-          })
-        )
-      );
+      console.log(`Created vehicle: ${createdVehicle.model}`);
     }
 
     // Get all vehicles with their images
     const createdVehicles = await prisma.vehicle.findMany({
       include: {
-        images: true,
-        _count: {
-          select: {
-            images: true
-          }
-        }
+        images: true
       }
     });
 
